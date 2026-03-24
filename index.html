@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Command Center</title>
+<style>
+:root {
+  --bg: #0f1117;
+  --card: #1a1d27;
+  --card-hover: #222633;
+  --border: #2a2e3d;
+  --text: #e4e4e7;
+  --text-dim: #8b8fa3;
+  --accent: #6366f1;
+  --accent-light: #818cf8;
+  --green: #22c55e;
+  --green-dim: #16a34a;
+  --yellow: #eab308;
+  --red: #ef4444;
+  --orange: #f97316;
+  --blue: #3b82f6;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Header */
+.header {
+  padding: 16px 16px 0;
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg);
+}
+.header-top {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 12px;
+}
+.header h1 {
+  font-size: 20px; font-weight: 700;
+  background: linear-gradient(135deg, var(--accent-light), var(--blue));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.last-updated {
+  font-size: 11px; color: var(--text-dim);
+}
+.status-dot {
+  display: inline-block; width: 6px; height: 6px;
+  border-radius: 50%; background: var(--green);
+  margin-right: 4px; vertical-align: middle;
+}
+
+/* Tabs */
+.tabs {
+  display: flex; gap: 4px; overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  padding: 8px 14px; border-radius: 8px;
+  font-size: 13px; font-weight: 600;
+  color: var(--text-dim); background: transparent;
+  border: none; cursor: pointer; white-space: nowrap;
+  transition: all 0.2s;
+}
+.tab.active {
+  background: var(--accent); color: white;
+}
+
+/* Content */
+.content { padding: 16px; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Cards */
+.card {
+  background: var(--card); border-radius: 12px;
+  padding: 14px; margin-bottom: 10px;
+  border: 1px solid var(--border);
+  transition: background 0.15s;
+}
+.card:active { background: var(--card-hover); }
+.card-label {
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.5px; color: var(--text-dim); margin-bottom: 6px;
+}
+.card-value {
+  font-size: 22px; font-weight: 700; line-height: 1.2;
+}
+.card-sub {
+  font-size: 12px; color: var(--text-dim); margin-top: 4px;
+}
+
+/* Quick Stats Row */
+.stats-row {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  margin-bottom: 16px;
+}
+.stats-row .card { text-align: center; }
+
+/* Section Headers */
+.section-title {
+  font-size: 14px; font-weight: 700; color: var(--text-dim);
+  margin: 20px 0 10px; text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* List Items */
+.list-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 14px; background: var(--card);
+  border-radius: 10px; margin-bottom: 8px;
+  border: 1px solid var(--border);
+}
+.list-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.list-body { flex: 1; min-width: 0; }
+.list-title {
+  font-size: 14px; font-weight: 600; line-height: 1.3;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.list-detail {
+  font-size: 12px; color: var(--text-dim); margin-top: 2px;
+}
+.list-right {
+  text-align: right; flex-shrink: 0;
+}
+.list-amount {
+  font-size: 14px; font-weight: 700;
+}
+.list-date {
+  font-size: 11px; color: var(--text-dim);
+}
+
+/* Priority badges */
+.badge {
+  display: inline-block; padding: 2px 8px; border-radius: 6px;
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+}
+.badge-urgent { background: rgba(239,68,68,0.15); color: var(--red); }
+.badge-soon { background: rgba(234,179,8,0.15); color: var(--yellow); }
+.badge-normal { background: rgba(99,102,241,0.15); color: var(--accent-light); }
+.badge-done { background: rgba(34,197,94,0.15); color: var(--green); }
+
+/* Progress bar */
+.progress-bar {
+  height: 6px; background: var(--border); border-radius: 3px;
+  margin-top: 8px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; border-radius: 3px;
+  transition: width 0.3s;
+}
+
+/* Money-specific */
+.balance-positive { color: var(--green); }
+.balance-negative { color: var(--red); }
+.balance-warning { color: var(--yellow); }
+
+/* Bill status */
+.bill-paid { color: var(--green); }
+.bill-due { color: var(--yellow); }
+.bill-overdue { color: var(--red); }
+
+/* Task checkbox */
+.task-check {
+  width: 22px; height: 22px; border-radius: 6px;
+  border: 2px solid var(--border); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 1px;
+}
+.task-check.done {
+  background: var(--green); border-color: var(--green);
+}
+.task-check.done::after {
+  content: '\2713'; color: white; font-size: 13px; font-weight: 700;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center; padding: 40px 20px;
+  color: var(--text-dim);
+}
+.empty-state .icon { font-size: 32px; margin-bottom: 12px; }
+.empty-state p { font-size: 13px; line-height: 1.5; }
+
+/* Floating action */
+.fab {
+  position: fixed; bottom: 20px; right: 20px;
+  width: 48px; height: 48px; border-radius: 50%;
+  background: var(--accent); color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; font-weight: 300;
+  box-shadow: 0 4px 16px rgba(99,102,241,0.4);
+  border: none; cursor: pointer; z-index: 50;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.tab-panel.active > * {
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Desktop */
+@media (min-width: 640px) {
+  .header { padding: 20px 24px 0; }
+  .content { padding: 20px 24px; max-width: 640px; margin: 0 auto; }
+  .stats-row { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* PIN Gate */
+#pin-gate{position:fixed;top:0;left:0;width:100%;height:100%;background:#0f1117;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,system-ui,sans-serif}
+#pin-gate .lock-icon{font-size:48px;margin-bottom:20px}
+#pin-gate h2{color:#e4e4e7;font-size:20px;font-weight:600;margin-bottom:8px}
+#pin-gate p{color:#8b8fa3;font-size:13px;margin-bottom:24px}
+.pin-input-row{display:flex;gap:12px;margin-bottom:20px}
+.pin-digit{width:52px;height:60px;background:#1a1d27;border:2px solid #2a2e3d;border-radius:12px;color:#e4e4e7;font-size:24px;font-weight:700;text-align:center;outline:none;caret-color:#6366f1;-webkit-text-security:disc}
+.pin-digit:focus{border-color:#6366f1;box-shadow:0 0 0 3px rgba(99,102,241,0.2)}
+.pin-error{color:#ef4444;font-size:13px;min-height:20px;margin-top:4px}
+.pin-digit.shake{animation:shake .4s ease-in-out}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+#dashboard-content{display:none}
+</style>
+</head>
+<body><div id="pin-gate">
+<div class="lock-icon">&#128274;</div>
+<h2>Command Center</h2>
+<p>Enter PIN to continue</p>
+<div class="pin-input-row">
+<input class="pin-digit" type="tel" maxlength="1" inputmode="numeric" autofocus>
+<input class="pin-digit" type="tel" maxlength="1" inputmode="numeric">
+<input class="pin-digit" type="tel" maxlength="1" inputmode="numeric">
+<input class="pin-digit" type="tel" maxlength="1" inputmode="numeric">
+</div>
+<div class="pin-error" id="pin-error"></div>
+</div><div id="dashboard-content">
+
+<div class="header">
+  <div class="header-top">
+    <h1>Command Center</h1>
+    <div class="last-updated">
+      <span class="status-dot"></span>
+      Updated Mar 24, 2026
+    </div>
+  </div>
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-tab="week">This Week</button>
+    <button class="tab" data-tab="tracking">Tracking</button>
+    <button class="tab" data-tab="bills">Bills</button>
+    <button class="tab" data-tab="travel">Travel</button>
+    <button class="tab" data-tab="tasks">Tasks</button>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- THIS WEEK -->
+  <div class="tab-panel active" id="panel-week">
+    <div class="stats-row">
+      <div class="card">
+        <div class="card-label">Today</div>
+        <div class="card-value">Tue 24</div>
+        <div class="card-sub">March 2026</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Open Tasks</div>
+        <div class="card-value">—</div>
+        <div class="card-sub">Add via Dispatch</div>
+      </div>
+    </div>
+
+    <div class="section-title">Upcoming Events</div>
+    <div class="list-item">
+      <div class="list-icon" style="background:rgba(59,130,246,0.15)">✈️</div>
+      <div class="list-body">
+        <div class="list-title">Newark Trip — Apr 8–15</div>
+        <div class="list-detail">UA 1149 SFO→EWR, UA 1844 return • Conf: B3ZM9O</div>
+      </div>
+      <div class="list-right">
+        <span class="badge badge-normal">15 days</span>
+      </div>
+    </div>
+
+    <div class="list-item">
+      <div class="list-icon" style="background:rgba(99,102,241,0.15)">🎾</div>
+      <div class="list-body">
+        <div class="list-title">US Open NYC — Sep 2–9</div>
+        <div class="list-detail">AA 234 SFO→JFK, Kimpton Era Midtown • Conf: SGJDYA</div>
+      </div>
+      <div class="list-right">
+        <span class="badge badge-normal">162 days</span>
+      </div>
+    </div>
+
+    <div class="section-title">Reminders</div>
+    <div class="list-item">
+      <div class="list-icon" style="background:rgba(234,179,8,0.15)">📋</div>
+      <div class="list-body">
+        <div class="list-title">Review Monarch flagged transactions</div>
+        <div class="list-detail">34 items need your confirmation (sister vs personal)</div>
+      </div>
+      <div class="list-right">
+        <span class="badge badge-soon">Review</span>
+      </div>
+    </div>
+    <div class="list-item">
+      <div class="list-icon" style="background:rgba(99,102,241,0.15)">📊</div>
+      <div class="list-body">
+        <div class="list-title">Tax deduction tracker in Documents</div>
+        <div class="list-detail">Fill in amounts for applicable deductions</div>
+      </div>
+      <div class="list-right">
+        <span class="badge badge-normal">Todo</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRACKING -->
+  <div class="tab-panel" id="panel-tracking">
+    <div class="section-title">Actively Tracking</div>
+
+    <div class="list-item" style="border-left:3px solid var(--green)">
+      <div class="list-icon" style="background:rgba(34,197,94,0.15)">✅</div>
+      <div class="list-body">
+        <div class="list-title">US Open 2026 — Flights & Hotel Booked</div>
+        <div class="list-detail">AA 234/177 SFO↔JFK (SGJDYA) + Kimpton Era 4 nights (#26175815)</div>
+        <div class="list-detail" style="margin-top:4px"><strong style="color:var(--text)">Status:</strong> <span style="color:var(--green)">Travel booked</span></div>
+        <div class="list-detail"><strong style="color:var(--text)">Last Checked:</strong> <span style="color:var(--text-dim)">Mar 24, 2026</span></div>
+      </div>
+    </div>
+    <div class="list-item" style="border-left:3px solid var(--yellow)">
+      <div class="list-icon" style="background:rgba(234,179,8,0.15)">🎫</div>
+      <div class="list-body">
+        <div class="list-title">US Open 2026 — Amex Presale Tickets</div>
+        <div class="list-detail">Waiting for Amex cardholder presale announcement. Typically opens late May / early June.</div>
+        <div class="list-detail" style="margin-top:4px"><strong style="color:var(--text)">Status:</strong> <span style="color:var(--yellow)">Not yet announced</span></div>
+        <div class="list-detail"><strong style="color:var(--text)">Last Checked:</strong> <span style="color:var(--text-dim)">Mar 24, 2026</span></div>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:24px">How This Works</div>
+    <div class="card">
+      <div class="card-sub" style="color:var(--text-dim);line-height:1.6">
+        Items here are checked daily at 8 AM by the morning sweep task. Status and last-checked dates update automatically. Ask Dispatch to add or remove items anytime.
+      </div>
+    </div>
+  </div>
+
+  <!-- BILLS -->
+  <div class="tab-panel" id="panel-bills">
+    <div class="stats-row">
+      <div class="card">
+        <div class="card-label">Due This Month</div>
+        <div class="card-value">—</div>
+        <div class="card-sub">Bills remaining</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Monthly Total</div>
+        <div class="card-value">—</div>
+        <div class="card-sub">All subscriptions</div>
+      </div>
+    </div>
+
+    <div class="section-title">Upcoming Bills</div>
+    <div class="empty-state">
+      <div class="icon">💳</div>
+      <p>Recurring bills and subscriptions will be populated from Monarch and Gmail data.</p>
+    </div>
+
+    <div class="section-title">Subscriptions</div>
+    <div class="empty-state">
+      <div class="icon">🔄</div>
+      <p>All recurring charges with next due dates will appear here.</p>
+    </div>
+  </div>
+
+  <!-- TRAVEL -->
+  <div class="tab-panel" id="panel-travel">
+    <div class="section-title">Your Flights</div>
+    <div class="card" style="border-left:3px solid var(--blue)">
+      <div style="display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700">
+        SFO <span style="color:var(--blue)">→</span> EWR
+      </div>
+      <div class="card-sub" style="margin-top:6px">
+        <strong style="color:var(--text)">UA 1149</strong> — Wed Apr 8, 7:00 AM – 12:39 PM<br>
+        Confirmation: <strong style="color:var(--blue)">B3ZM9O</strong>
+      </div>
+    </div>
+    <div class="card" style="border-left:3px solid var(--blue)">
+      <div style="display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700">
+        EWR <span style="color:var(--blue)">→</span> SFO
+      </div>
+      <div class="card-sub" style="margin-top:6px">
+        <strong style="color:var(--text)">UA 1844</strong> — Tue Apr 15 (return)<br>
+        Confirmation: <strong style="color:var(--blue)">B3ZM9O</strong>
+      </div>
+    </div>
+
+    <div class="card" style="border-left:3px solid var(--blue);margin-top:12px">
+      <div style="display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700">
+        SFO <span style="color:var(--blue)">→</span> JFK
+      </div>
+      <div class="card-sub" style="margin-top:6px">
+        <strong style="color:var(--text)">AA 234</strong> — Wed Sep 2, 7:03 AM – 3:45 PM<br>
+        Confirmation: <strong style="color:var(--blue)">SGJDYA</strong>
+      </div>
+    </div>
+    <div class="card" style="border-left:3px solid var(--blue)">
+      <div style="display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700">
+        JFK <span style="color:var(--blue)">→</span> SFO
+      </div>
+      <div class="card-sub" style="margin-top:6px">
+        <strong style="color:var(--text)">AA 177</strong> — Tue Sep 8, 9:00 PM (arrives Sep 9)<br>
+        Confirmation: <strong style="color:var(--blue)">SGJDYA</strong>
+      </div>
+    </div>
+
+    <div class="section-title">Your Hotels</div>
+    <div class="card" style="border-left:3px solid var(--accent)">
+      <div style="font-size:16px;font-weight:700">Kimpton Hotel Era</div>
+      <div class="card-sub" style="margin-top:4px">32 West 48th Street, New York, NY 10036</div>
+      <div class="card-sub" style="margin-top:6px">
+        <strong style="color:var(--text)">Check-in:</strong> Sep 2, 3:00 PM &nbsp;|&nbsp;
+        <strong style="color:var(--text)">Check-out:</strong> Sep 6, 11:00 AM<br>
+        <strong style="color:var(--text)">4 nights</strong> — 1 Queen, 2 Adults &nbsp;|&nbsp; Google Inc Gold rate<br>
+        Confirmation: <strong style="color:var(--accent)">#26175815</strong> &nbsp;|&nbsp; Total: <strong style="color:var(--text)">$1,459.86</strong><br>
+        <span style="color:var(--yellow)">Cancel by Aug 31, 6:00 PM</span>
+      </div>
+    </div>
+
+    <div class="section-title">Check-in Reminders</div>
+    <div class="list-item">
+      <div class="list-icon" style="background:rgba(59,130,246,0.15)">🔔</div>
+      <div class="list-body">
+        <div class="list-title">United check-in opens Apr 7</div>
+        <div class="list-detail">UA 1149 SFO→EWR — check in 24hrs before departure</div>
+      </div>
+      <div class="list-right">
+        <span class="badge badge-soon">14 days</span>
+      </div>
+    </div>
+    <div class="list-item">
+      <div class="list-icon" style="background:rgba(59,130,246,0.15)">🔔</div>
+      <div class="list-body">
+        <div class="list-title">AA check-in opens Sep 1</div>
+        <div class="list-detail">AA 234 SFO→JFK — check in 24hrs before departure</div>
+      </div>
+      <div class="list-right">
+        <span class="badge badge-normal">161 days</span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:8px;border:1px dashed var(--border);background:transparent">
+      <div class="card-sub" style="color:var(--text-dim);line-height:1.6;text-align:center">
+        Only your bookings show here — sister's flights/hotels are filtered out. Updated daily at 8 AM.
+      </div>
+    </div>
+  </div>
+
+  <!-- TASKS -->
+  <div class="tab-panel" id="panel-tasks">
+    <div class="stats-row">
+      <div class="card">
+        <div class="card-label">Open</div>
+        <div class="card-value">3</div>
+        <div class="card-sub">tasks</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Done This Week</div>
+        <div class="card-value">0</div>
+        <div class="card-sub">tasks</div>
+      </div>
+    </div>
+
+    <div class="section-title">To Do</div>
+    <div class="list-item">
+      <div class="task-check"></div>
+      <div class="list-body">
+        <div class="list-title">Run autoresearch on tennis betting skill</div>
+        <div class="list-detail">Skill installed — run on desktop to auto-optimize with Karpathy's method</div>
+      </div>
+      <div class="list-right">
+        <span class="badge badge-normal">At home</span>
+      </div>
+    </div>
+    <div class="list-item">
+      <div class="task-check"></div>
+      <div class="list-body">
+        <div class="list-title">Review 34 flagged Monarch transactions</div>
+        <div class="list-detail">Confirm sister vs personal for ambiguous items</div>
+      </div>
+      <div class="list-right">
+        <span class="badge badge-soon">This week</span>
+      </div>
+    </div>
+    <div class="list-item">
+      <div class="task-check"></div>
+      <div class="list-body">
+        <div class="list-title">Fill in tax deduction tracker amounts</div>
+        <div class="list-detail">2025_tax_deduction_tracker.xlsx in Documents</div>
+      </div>
+      <div class="list-right">
+        <span class="badge badge-normal">Ongoing</span>
+      </div>
+    </div>
+
+    <div class="section-title">Completed</div>
+    <div class="list-item" style="opacity:0.5">
+      <div class="task-check done"></div>
+      <div class="list-body">
+        <div class="list-title" style="text-decoration:line-through">Monarch 2026 transaction review</div>
+        <div class="list-detail">519 transactions reviewed, sister's share ~$4,864</div>
+      </div>
+      <div class="list-right">
+        <span class="badge badge-done">Done</span>
+      </div>
+    </div>
+    <div class="list-item" style="opacity:0.5">
+      <div class="task-check done"></div>
+      <div class="list-body">
+        <div class="list-title" style="text-decoration:line-through">Tax deduction tracker created</div>
+        <div class="list-detail">Comprehensive 5-sheet workbook with H-1B specifics</div>
+      </div>
+      <div class="list-right">
+        <span class="badge badge-done">Done</span>
+      </div>
+    </div>
+    <div class="list-item" style="opacity:0.5">
+      <div class="task-check done"></div>
+      <div class="list-body">
+        <div class="list-title" style="text-decoration:line-through">Weather market research Mar 24</div>
+        <div class="list-detail">PDF + spreadsheet delivered</div>
+      </div>
+      <div class="list-right">
+        <span class="badge badge-done">Done</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Tab switching
+document.getElementById('tabs').addEventListener('click', e => {
+  const tab = e.target.closest('.tab');
+  if (!tab) return;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  tab.classList.add('active');
+  document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+});
+
+// Touch feedback
+document.querySelectorAll('.list-item, .card').forEach(el => {
+  el.addEventListener('touchstart', () => el.style.transform = 'scale(0.98)', {passive:true});
+  el.addEventListener('touchend', () => el.style.transform = '', {passive:true});
+});
+</script>
+</div><script>
+(function(){
+var CORRECT_PIN='1234';
+if(sessionStorage.getItem('cc_authed')==='true'){
+document.getElementById('pin-gate').style.display='none';
+document.getElementById('dashboard-content').style.display='';
+return;
+}
+var digits=document.querySelectorAll('.pin-digit');
+var errorEl=document.getElementById('pin-error');
+digits.forEach(function(input,i){
+input.addEventListener('input',function(e){
+var val=e.target.value.replace(/[^0-9]/g,'');
+e.target.value=val;
+if(val&&i<digits.length-1){digits[i+1].focus();}
+var pin=Array.from(digits).map(function(d){return d.value;}).join('');
+if(pin.length===4){
+if(pin===CORRECT_PIN){
+sessionStorage.setItem('cc_authed','true');
+document.getElementById('pin-gate').style.display='none';
+document.getElementById('dashboard-content').style.display='';
+}else{
+errorEl.textContent='Incorrect PIN';
+digits.forEach(function(d){d.value='';d.classList.add('shake');});
+digits[0].focus();
+setTimeout(function(){digits.forEach(function(d){d.classList.remove('shake');});},400);
+setTimeout(function(){errorEl.textContent='';},2000);
+}
+}
+});
+input.addEventListener('keydown',function(e){
+if(e.key==='Backspace'&&!e.target.value&&i>0){digits[i-1].focus();}
+});
+});
+})();
+</script></body>
+</html>
