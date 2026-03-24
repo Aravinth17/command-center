@@ -265,6 +265,7 @@ body {
     <button class="tab" data-tab="tracking">Tracking</button>
     <button class="tab" data-tab="bills">Bills</button>
     <button class="tab" data-tab="travel">Travel</button>
+    <button class="tab" data-tab="family">Family</button>
     <button class="tab" data-tab="tasks">Tasks</button>
   </div>
 </div>
@@ -287,17 +288,6 @@ body {
     </div>
 
     <div class="section-title">Upcoming Events</div>
-    <div class="list-item">
-      <div class="list-icon" style="background:rgba(59,130,246,0.15)">✈️</div>
-      <div class="list-body">
-        <div class="list-title">Newark Trip — Apr 8–15</div>
-        <div class="list-detail">UA 1149 SFO→EWR, UA 1844 return • Conf: B3ZM9O</div>
-      </div>
-      <div class="list-right">
-        <span class="badge badge-normal">15 days</span>
-      </div>
-    </div>
-
     <div class="list-item">
       <div class="list-icon" style="background:rgba(99,102,241,0.15)">🎾</div>
       <div class="list-body">
@@ -396,25 +386,6 @@ body {
     <div class="section-title">Your Flights</div>
     <div class="card" style="border-left:3px solid var(--blue)">
       <div style="display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700">
-        SFO <span style="color:var(--blue)">→</span> EWR
-      </div>
-      <div class="card-sub" style="margin-top:6px">
-        <strong style="color:var(--text)">UA 1149</strong> — Wed Apr 8, 7:00 AM – 12:39 PM<br>
-        Confirmation: <strong style="color:var(--blue)">B3ZM9O</strong>
-      </div>
-    </div>
-    <div class="card" style="border-left:3px solid var(--blue)">
-      <div style="display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700">
-        EWR <span style="color:var(--blue)">→</span> SFO
-      </div>
-      <div class="card-sub" style="margin-top:6px">
-        <strong style="color:var(--text)">UA 1844</strong> — Tue Apr 15 (return)<br>
-        Confirmation: <strong style="color:var(--blue)">B3ZM9O</strong>
-      </div>
-    </div>
-
-    <div class="card" style="border-left:3px solid var(--blue);margin-top:12px">
-      <div style="display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700">
         SFO <span style="color:var(--blue)">→</span> JFK
       </div>
       <div class="card-sub" style="margin-top:6px">
@@ -449,16 +420,6 @@ body {
     <div class="list-item">
       <div class="list-icon" style="background:rgba(59,130,246,0.15)">🔔</div>
       <div class="list-body">
-        <div class="list-title">United check-in opens Apr 7</div>
-        <div class="list-detail">UA 1149 SFO→EWR — check in 24hrs before departure</div>
-      </div>
-      <div class="list-right">
-        <span class="badge badge-soon">14 days</span>
-      </div>
-    </div>
-    <div class="list-item">
-      <div class="list-icon" style="background:rgba(59,130,246,0.15)">🔔</div>
-      <div class="list-body">
         <div class="list-title">AA check-in opens Sep 1</div>
         <div class="list-detail">AA 234 SFO→JFK — check in 24hrs before departure</div>
       </div>
@@ -469,7 +430,48 @@ body {
 
     <div class="card" style="margin-top:8px;border:1px dashed var(--border);background:transparent">
       <div class="card-sub" style="color:var(--text-dim);line-height:1.6;text-align:center">
-        Only your bookings show here — sister's flights/hotels are filtered out. Updated daily at 8 AM.
+        Your bookings only. Sister's travel is on the Family tab. Updated daily at 8 AM.
+      </div>
+    </div>
+  </div>
+
+  <!-- FAMILY -->
+  <div class="tab-panel" id="panel-family">
+    <div class="section-title">Sister's Flights</div>
+    <div class="card" style="border-left:3px solid var(--orange)">
+      <div style="display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700">
+        SFO <span style="color:var(--orange)">→</span> EWR
+      </div>
+      <div class="card-sub" style="margin-top:6px">
+        <strong style="color:var(--text)">UA 1149</strong> — Wed Apr 8, 7:00 AM – 12:39 PM<br>
+        Confirmation: <strong style="color:var(--orange)">B3ZM9O</strong>
+      </div>
+    </div>
+    <div class="card" style="border-left:3px solid var(--orange)">
+      <div style="display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700">
+        EWR <span style="color:var(--orange)">→</span> SFO
+      </div>
+      <div class="card-sub" style="margin-top:6px">
+        <strong style="color:var(--text)">UA 1844</strong> — Tue Apr 15 (return)<br>
+        Confirmation: <strong style="color:var(--orange)">B3ZM9O</strong>
+      </div>
+    </div>
+
+    <div class="section-title">Check-in Reminders</div>
+    <div class="list-item">
+      <div class="list-icon" style="background:rgba(249,115,22,0.15)">🔔</div>
+      <div class="list-body">
+        <div class="list-title">United check-in opens Apr 7</div>
+        <div class="list-detail">UA 1149 SFO→EWR — sister's flight, check in 24hrs before</div>
+      </div>
+      <div class="list-right">
+        <span class="badge badge-soon">14 days</span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:8px;border:1px dashed var(--border);background:transparent">
+      <div class="card-sub" style="color:var(--text-dim);line-height:1.6;text-align:center">
+        Family travel bookings. These are separate from your personal trips.
       </div>
     </div>
   </div>
