@@ -257,11 +257,12 @@ body {
     <h1>Command Center</h1>
     <div class="last-updated">
       <span class="status-dot"></span>
-      Updated Mar 24, 2026
+      <span id="last-sync">Updated Mar 24, 2026</span>
     </div>
   </div>
   <div class="tabs" id="tabs">
     <button class="tab active" data-tab="week">This Week</button>
+    <button class="tab" data-tab="pnl">P&L</button>
     <button class="tab" data-tab="tracking">Tracking</button>
     <button class="tab" data-tab="bills">Bills</button>
     <button class="tab" data-tab="travel">Travel</button>
@@ -322,6 +323,110 @@ body {
     </div>
   </div>
 
+  <!-- P&L -->
+  <div class="tab-panel" id="panel-pnl">
+    <div class="stats-row">
+      <div class="card">
+        <div class="card-label">Total Record</div>
+        <div class="card-value balance-positive">44W–12L</div>
+        <div class="card-sub">78.6% win rate</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Gross Payouts</div>
+        <div class="card-value balance-positive">$4,219</div>
+        <div class="card-sub">Mar 11–24, 2026</div>
+      </div>
+    </div>
+
+    <div class="section-title">Weather Markets</div>
+    <div class="card" style="border-left:3px solid var(--green)">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-size:16px;font-weight:700" class="balance-positive">13W – 0L</div>
+          <div class="card-sub">100% win rate · All NO plays</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:18px;font-weight:700" class="balance-positive">$2,919</div>
+          <div class="card-sub">gross payout</div>
+        </div>
+      </div>
+      <div class="progress-bar" style="margin-top:10px">
+        <div class="progress-fill" style="width:100%;background:var(--green)"></div>
+      </div>
+      <div class="card-sub" style="margin-top:8px">
+        Top cities: Seattle (5W, $1,018) · SF (4W, $764) · DC (2W, $263) · Miami (2W, $737) · NYC (1W, $137)
+      </div>
+    </div>
+
+    <div class="section-title">Tennis Markets</div>
+    <div class="card" style="border-left:3px solid var(--blue)">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-size:16px;font-weight:700" class="balance-positive">31W – 11L</div>
+          <div class="card-sub">73.8% win rate · Singles + Combos</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:18px;font-weight:700" class="balance-positive">$1,300</div>
+          <div class="card-sub">gross payout</div>
+        </div>
+      </div>
+      <div class="progress-bar" style="margin-top:10px">
+        <div class="progress-fill" style="width:73.8%;background:var(--blue)"></div>
+      </div>
+      <div class="card-sub" style="margin-top:8px">
+        Singles: 14W–0L ($642) · 2-leg combos: 14W–7L ($588) · 3+ leg combos: 3W–4L ($70)
+      </div>
+    </div>
+
+    <div class="section-title">Recent Settlements</div>
+    <div class="list-item">
+      <div class="list-icon" style="background:rgba(34,197,94,0.15)">✅</div>
+      <div class="list-body">
+        <div class="list-title">Sinner + Fils combo</div>
+        <div class="list-detail">35 contracts · $35 payout</div>
+      </div>
+      <div class="list-right"><div class="list-date">Mar 24</div></div>
+    </div>
+    <div class="list-item">
+      <div class="list-icon" style="background:rgba(239,68,68,0.15)">❌</div>
+      <div class="list-body">
+        <div class="list-title">Korda + Fils combo</div>
+        <div class="list-detail">43 contracts · $0 payout</div>
+      </div>
+      <div class="list-right"><div class="list-date">Mar 24</div></div>
+    </div>
+    <div class="list-item">
+      <div class="list-icon" style="background:rgba(34,197,94,0.15)">✅</div>
+      <div class="list-body">
+        <div class="list-title">Seattle NO ≥58° (Mar 23)</div>
+        <div class="list-detail">358 contracts · $358 payout</div>
+      </div>
+      <div class="list-right"><div class="list-date">Mar 24</div></div>
+    </div>
+    <div class="list-item">
+      <div class="list-icon" style="background:rgba(34,197,94,0.15)">✅</div>
+      <div class="list-body">
+        <div class="list-title">Pegula + Sabalenka combo</div>
+        <div class="list-detail">64 contracts · $64 payout</div>
+      </div>
+      <div class="list-right"><div class="list-date">Mar 23</div></div>
+    </div>
+    <div class="list-item">
+      <div class="list-icon" style="background:rgba(34,197,94,0.15)">✅</div>
+      <div class="list-body">
+        <div class="list-title">Andreeva vs Mboko (Mboko)</div>
+        <div class="list-detail">29 contracts · $29 payout</div>
+      </div>
+      <div class="list-right"><div class="list-date">Mar 23</div></div>
+    </div>
+
+    <div class="card" style="margin-top:8px;border:1px dashed var(--border);background:transparent">
+      <div class="card-sub" style="color:var(--text-dim);line-height:1.6;text-align:center">
+        Gross payouts only — true P&L requires cost basis from Kalshi portfolio. Data from settlement emails Mar 11–24. Updated by Dispatch.
+      </div>
+    </div>
+  </div>
+
   <!-- TRACKING -->
   <div class="tab-panel" id="panel-tracking">
     <div class="section-title">Actively Tracking</div>
@@ -357,27 +462,105 @@ body {
   <div class="tab-panel" id="panel-bills">
     <div class="stats-row">
       <div class="card">
-        <div class="card-label">Due This Month</div>
-        <div class="card-value">—</div>
-        <div class="card-sub">Bills remaining</div>
+        <div class="card-label">Remaining</div>
+        <div class="card-value balance-warning">$3,208</div>
+        <div class="card-sub">8 bills left this month</div>
       </div>
       <div class="card">
-        <div class="card-label">Monthly Total</div>
-        <div class="card-value">—</div>
-        <div class="card-sub">All subscriptions</div>
+        <div class="card-label">March Total</div>
+        <div class="card-value">$4,202</div>
+        <div class="card-sub">$994 paid so far</div>
       </div>
     </div>
 
-    <div class="section-title">Upcoming Bills</div>
-    <div class="empty-state">
-      <div class="icon">💳</div>
-      <p>Recurring bills and subscriptions will be populated from Monarch and Gmail data.</p>
+    <div class="section-title">Upcoming (Mar 26–31)</div>
+    <div class="list-item">
+      <div class="list-icon" style="background:rgba(239,68,68,0.15)">💳</div>
+      <div class="list-body">
+        <div class="list-title">Apple Card Payment</div>
+        <div class="list-detail">~$2,921 · Mar 26</div>
+      </div>
+      <div class="list-right"><div class="list-amount">$2,921</div></div>
+    </div>
+    <div class="list-item">
+      <div class="list-icon" style="background:rgba(234,179,8,0.15)">⚡</div>
+      <div class="list-body">
+        <div class="list-title">Chase Withdrawal</div>
+        <div class="list-detail">~$3,095 · Mar 28</div>
+      </div>
+      <div class="list-right"><div class="list-amount">$3,095</div></div>
+    </div>
+    <div class="list-item">
+      <div class="list-icon" style="background:rgba(99,102,241,0.15)">🎬</div>
+      <div class="list-body">
+        <div class="list-title">Cinemark Movie Club</div>
+        <div class="list-detail">$9.99 · Mar 28 · Amex Gold</div>
+      </div>
+      <div class="list-right"><div class="list-amount">$9.99</div></div>
+    </div>
+    <div class="list-item">
+      <div class="list-icon" style="background:rgba(99,102,241,0.15)">🛒</div>
+      <div class="list-body">
+        <div class="list-title">Walmart+</div>
+        <div class="list-detail">$14.16 · Mar 28 · Platinum</div>
+      </div>
+      <div class="list-right"><div class="list-amount">$14.16</div></div>
+    </div>
+    <div class="list-item">
+      <div class="list-icon" style="background:rgba(99,102,241,0.15)">🏠</div>
+      <div class="list-body">
+        <div class="list-title">Lemonade Insurance</div>
+        <div class="list-detail">$6.34 · Mar 28</div>
+      </div>
+      <div class="list-right"><div class="list-amount">$6.34</div></div>
+    </div>
+    <div class="list-item">
+      <div class="list-icon" style="background:rgba(99,102,241,0.15)">🛍️</div>
+      <div class="list-body">
+        <div class="list-title">Afterpay (x2)</div>
+        <div class="list-detail">~$37 + ~$36 · Mar 30–31</div>
+      </div>
+      <div class="list-right"><div class="list-amount">$73</div></div>
     </div>
 
-    <div class="section-title">Subscriptions</div>
-    <div class="empty-state">
-      <div class="icon">🔄</div>
-      <p>All recurring charges with next due dates will appear here.</p>
+    <div class="section-title">Key Monthly Recurring</div>
+    <div class="list-item">
+      <div class="list-icon" style="background:rgba(34,197,94,0.15)">🚗</div>
+      <div class="list-body">
+        <div class="list-title">Tesla (Auto + Insurance + Charging)</div>
+        <div class="list-detail">$230 + $10 + ~$108 + misc · Paid</div>
+      </div>
+      <div class="list-right"><span class="badge badge-done">Paid</span></div>
+    </div>
+    <div class="list-item">
+      <div class="list-icon" style="background:rgba(34,197,94,0.15)">📱</div>
+      <div class="list-body">
+        <div class="list-title">Apple (Phone x2 + LLM sub)</div>
+        <div class="list-detail">$59 + $42 + $42 · Paid Mar 1</div>
+      </div>
+      <div class="list-right"><span class="badge badge-done">Paid</span></div>
+    </div>
+    <div class="list-item">
+      <div class="list-icon" style="background:rgba(34,197,94,0.15)">⚡</div>
+      <div class="list-body">
+        <div class="list-title">PG&E</div>
+        <div class="list-detail">~$95 · Paid Mar 11</div>
+      </div>
+      <div class="list-right"><span class="badge badge-done">Paid</span></div>
+    </div>
+    <div class="list-item">
+      <div class="list-icon" style="background:rgba(34,197,94,0.15)">🎬</div>
+      <div class="list-body">
+        <div class="list-title">AMC A-List + Extras</div>
+        <div class="list-detail">Multiple charges · Paid</div>
+      </div>
+      <div class="list-right"><span class="badge badge-done">Paid</span></div>
+    </div>
+
+    <div class="card" style="margin-top:8px;border:1px dashed var(--border);background:transparent">
+      <div class="card-sub" style="color:var(--text-dim);line-height:1.6;text-align:center">
+        Data from Monarch Money · Income: $30,797 ($26,795 received). 43 unreviewed recurring merchants pending.
+      </div>
     </div>
   </div>
 
@@ -574,6 +757,39 @@ document.querySelectorAll('.list-item, .card').forEach(el => {
   el.addEventListener('touchstart', () => el.style.transform = 'scale(0.98)', {passive:true});
   el.addEventListener('touchend', () => el.style.transform = '', {passive:true});
 });
+
+// Live countdown badges — auto-calculates days from today
+(function(){
+  const events = {
+    'US Open NYC': new Date('2026-09-02'),
+    'Newark Trip': new Date('2026-04-08'),
+    'AA check-in': new Date('2026-09-01'),
+    'United check-in': new Date('2026-04-07'),
+    'Cancel by Aug 31': new Date('2026-08-31')
+  };
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  document.querySelectorAll('.badge').forEach(b => {
+    const text = b.textContent.trim();
+    const match = text.match(/^(\d+)\s*days?$/);
+    if (!match) return;
+    // Find which event this badge belongs to by walking up the DOM
+    const item = b.closest('.list-item, .card');
+    if (!item) return;
+    const title = item.textContent;
+    for (const [name, date] of Object.entries(events)) {
+      if (title.includes(name)) {
+        const diff = Math.ceil((date - today) / 86400000);
+        if (diff >= 0) {
+          b.textContent = diff + (diff === 1 ? ' day' : ' days');
+          if (diff <= 3) { b.className = 'badge badge-urgent'; }
+          else if (diff <= 7) { b.className = 'badge badge-soon'; }
+        }
+        break;
+      }
+    }
+  });
+})();
 </script>
 </div>
 <script>
