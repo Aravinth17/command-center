@@ -820,7 +820,7 @@ body {
 
     <div class="card" style="margin-top:8px;border:1px dashed var(--border);background:transparent">
       <div class="card-sub" style="color:var(--text-dim);line-height:1.6;text-align:center">
-        Data from verified Monarch audit · Mar 28, 2026 · 7 cards tracked · Chase College is primary pay account
+        Data from verified Monarch audit · Mar 28, 2026 · 6 cards tracked · Chase College is primary pay account
       </div>
     </div>
   </div>
@@ -1166,19 +1166,23 @@ document.querySelectorAll('.list-item, .card').forEach(el => {
 (function buildAmIBroke() {
   var today = new Date(2026, 2, 28);
   var cards = [
-    { name: 'Apple Card', bal: 1234.92, due: 27, confirmed: true, auto: 'Yes', from: 'Chase College' },
-    { name: 'BILT ...3512', bal: 57.00, due: 27, confirmed: false, auto: 'Disabled', from: 'Chase College', stale: true },
+    { name: 'Apple Card', bal: 1234.92, due: 31, confirmed: true, auto: 'Yes', from: 'Chase College' },
     { name: 'Citi Cash ...1534', bal: 97.66, due: 27, confirmed: true, auto: 'Yes', from: 'Chase College' },
     { name: 'Robinhood ...8931', bal: 2807.03, due: 1, confirmed: true, auto: 'No', from: 'Chase College' },
     { name: 'Amex Plat ...1007', bal: 3629.49, due: 13, confirmed: true, auto: 'No', from: 'Chase + SoFi' },
     { name: 'Amex Gold ...2006', bal: 3258.98, due: 8, confirmed: true, auto: 'No', from: 'Chase + SoFi' },
     { name: 'Chase CC ...8370', bal: 0.00, due: 16, confirmed: true, auto: 'Yes', from: 'Chase College' }
   ];
+  function clampDate(y, m, day) {
+    // For due:31 (last day of month), clamp to actual last day
+    var last = new Date(y, m + 1, 0).getDate();
+    return new Date(y, m, Math.min(day, last));
+  }
   function daysUntil(dueDay) {
     var d = new Date(today);
-    var thisM = new Date(d.getFullYear(), d.getMonth(), dueDay);
+    var thisM = clampDate(d.getFullYear(), d.getMonth(), dueDay);
     if (thisM > d) return Math.ceil((thisM - d) / 86400000);
-    return Math.ceil((new Date(d.getFullYear(), d.getMonth() + 1, dueDay) - d) / 86400000);
+    return Math.ceil((clampDate(d.getFullYear(), d.getMonth() + 1, dueDay) - d) / 86400000);
   }
   cards.forEach(function(c) { c.daysLeft = daysUntil(c.due); });
   cards.sort(function(a, b) { return a.daysLeft - b.daysLeft; });
