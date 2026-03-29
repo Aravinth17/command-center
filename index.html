@@ -223,39 +223,6 @@ body {
 </head>
 <body>
 
-<style>
-#pin-gate {
-  position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg);z-index:9999;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-}
-.pin-title{font-size:20px;font-weight:700;color:var(--text);margin-bottom:8px;}
-.pin-sub{font-size:13px;color:var(--text-dim);margin-bottom:24px;}
-.pin-digits{display:flex;gap:12px;}
-.pin-digit{
-  width:48px;height:56px;border-radius:10px;border:2px solid var(--border);
-  background:var(--card);color:var(--text);font-size:24px;font-weight:700;
-  text-align:center;outline:none;-webkit-text-security:disc;
-}
-.pin-digit:focus{border-color:var(--accent);}
-#pin-error{color:var(--red);font-size:12px;margin-top:12px;height:16px;}
-@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
-.shake{animation:shake 0.3s ease;}
-</style>
-
-<div id="pin-gate">
-  <div class="pin-title">Command Center</div>
-  <div class="pin-sub">Enter PIN to continue</div>
-  <div class="pin-digits">
-    <input class="pin-digit" type="tel" maxlength="1" inputmode="numeric" autofocus>
-    <input class="pin-digit" type="tel" maxlength="1" inputmode="numeric">
-    <input class="pin-digit" type="tel" maxlength="1" inputmode="numeric">
-    <input class="pin-digit" type="tel" maxlength="1" inputmode="numeric">
-  </div>
-  <div id="pin-error"></div>
-</div>
-<div id="dashboard-content" style="display:none">
-
-
 <div class="header">
   <div class="header-top">
     <h1>Command Center</h1>
@@ -496,12 +463,12 @@ body {
     <div class="stats-row">
       <div class="card">
         <div class="card-label">Total Record</div>
-        <div class="card-value balance-positive">56W–12L</div>
-        <div class="card-sub">82.4% win rate</div>
+        <div class="card-value balance-positive">57W–12L</div>
+        <div class="card-sub">82.6% win rate</div>
       </div>
       <div class="card">
         <div class="card-label">Gross Payouts</div>
-        <div class="card-value balance-positive">$5,783</div>
+        <div class="card-value balance-positive">$5,818</div>
         <div class="card-sub">Mar 11–28, 2026</div>
       </div>
     </div>
@@ -547,6 +514,14 @@ body {
     </div>
 
     <div class="section-title">Recent Settlements</div>
+    <div class="list-item">
+      <div class="list-icon" style="background:rgba(34,197,94,0.15)">✅</div>
+      <div class="list-body">
+        <div class="list-title">RCB vs SRH (RCB)</div>
+        <div class="list-detail">35 contracts · $35 payout</div>
+      </div>
+      <div class="list-right"><div class="list-date">Mar 28</div></div>
+    </div>
     <div class="list-item">
       <div class="list-icon" style="background:rgba(34,197,94,0.15)">✅</div>
       <div class="list-body">
@@ -1354,27 +1329,5 @@ document.querySelectorAll('.list-item, .card').forEach(el => {
   }
 })();
 </script>
-</div>
-<script>(function(){
-var CORRECT_PIN='1709';
-if(sessionStorage.getItem('cc_authed')==='true'){document.getElementById('pin-gate').style.display='none';document.getElementById('dashboard-content').style.display='';return;}
-var digits=document.querySelectorAll('.pin-digit');
-var errorEl=document.getElementById('pin-error');
-digits.forEach(function(input,i){
-  input.addEventListener('input',function(e){
-    var val=e.target.value.replace(/[^0-9]/g,'');e.target.value=val;
-    if(val&&i<digits.length-1){digits[i+1].focus();}
-    var pin=Array.from(digits).map(function(d){return d.value;}).join('');
-    if(pin.length===4){
-      if(pin===CORRECT_PIN){sessionStorage.setItem('cc_authed','true');document.getElementById('pin-gate').style.display='none';document.getElementById('dashboard-content').style.display='';}
-      else{errorEl.textContent='Incorrect PIN';digits.forEach(function(d){d.value='';d.classList.add('shake');});digits[0].focus();setTimeout(function(){digits.forEach(function(d){d.classList.remove('shake');});},400);setTimeout(function(){errorEl.textContent='';},2000);}
-    }
-  });
-  input.addEventListener('keydown',function(e){
-    if(e.key==='Backspace'&&!e.target.value&&i>0){digits[i-1].focus();}
-  });
-});
-})();</script>
-
 </body>
 </html>
