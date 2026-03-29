@@ -795,6 +795,26 @@ body {
       </table>
     </div>
 
+    <!-- DIRECT BILLS (CHECKING) -->
+    <div class="section-title">Direct Bills (Checking Accounts)</div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <table style="width:100%;border-collapse:collapse;font-size:12px">
+        <thead>
+          <tr style="background:var(--bg);text-align:left">
+            <th style="padding:10px 10px;color:var(--text-dim);font-size:10px;text-transform:uppercase;letter-spacing:0.5px">Bill</th>
+            <th style="padding:10px 6px;color:var(--text-dim);font-size:10px;text-transform:uppercase;letter-spacing:0.5px;text-align:right">Amount</th>
+            <th style="padding:10px 6px;color:var(--text-dim);font-size:10px;text-transform:uppercase;letter-spacing:0.5px;text-align:center">Due</th>
+            <th style="padding:10px 10px;color:var(--text-dim);font-size:10px;text-transform:uppercase;letter-spacing:0.5px;text-align:center">Auto</th>
+          </tr>
+        </thead>
+        <tbody id="bills-table"></tbody>
+      </table>
+    </div>
+
+    <!-- CASH SUFFICIENCY — CAN I COVER EVERYTHING? -->
+    <div class="section-title">Can I Cover Everything?</div>
+    <div class="card" id="sufficiency-box"></div>
+
     <!-- NEXT 7 DAYS ALERT -->
     <div class="section-title">Next 7 Days</div>
     <div class="card" id="alert-box"></div>
@@ -1184,8 +1204,18 @@ document.querySelectorAll('.list-item, .card').forEach(el => {
     if (thisM > d) return Math.ceil((thisM - d) / 86400000);
     return Math.ceil((clampDate(d.getFullYear(), d.getMonth() + 1, dueDay) - d) / 86400000);
   }
+  // Direct bills from checking accounts
+  var bills = [
+    { name: 'Rent (Graham / Conservice)', amt: 3547.59, due: 1, auto: 'No', from: 'Chase College', type: 'rent' },
+    { name: 'Car Insurance (Wells Fargo)', amt: 896.44, due: 1, auto: 'Yes', from: 'Checking', type: 'insurance' },
+    { name: 'PG&E', amt: 95.32, due: 11, auto: 'Yes', from: 'Chase College', type: 'utility' },
+    { name: 'Official Checks Fee', amt: 10.00, due: 28, auto: 'Yes', from: 'Chase College', type: 'fee' }
+  ];
+
   cards.forEach(function(c) { c.daysLeft = daysUntil(c.due); });
+  bills.forEach(function(b) { b.daysLeft = daysUntil(b.due); });
   cards.sort(function(a, b) { return a.daysLeft - b.daysLeft; });
+  bills.sort(function(a, b) { return a.daysLeft - b.daysLeft; });
 
   var tbody = document.getElementById('cc-table');
   if (!tbody) return;
@@ -1205,48 +1235,116 @@ document.querySelectorAll('.list-item, .card').forEach(el => {
       '<td style="padding:8px 10px;text-align:center;font-size:11px">' + ai + '</td></tr>';
   });
 
+  // Render bills table
+  var btbody = document.getElementById('bills-table');
+  if (btbody) {
+    bills.forEach(function(b) {
+      var uc = b.daysLeft <= 2 ? 'var(--red)' : b.daysLeft <= 7 ? 'var(--yellow)' : 'var(--text-dim)';
+      var ai = b.auto === 'Yes' ? '<span style="color:var(--green)">ON</span>' : '<span style="color:var(--yellow)">Manual</span>';
+      btbody.innerHTML += '<tr style="border-top:1px solid var(--border)">' +
+        '<td style="padding:8px 10px"><span style="font-weight:600;font-size:12px">' + b.name + '</span>' +
+        '<br><span style="font-size:10px;color:var(--text-dim)">' + b.from + '</span></td>' +
+        '<td style="padding:8px 6px;text-align:right;font-weight:700;color:' + (b.amt > 1000 ? 'var(--red)' : 'var(--text)') + '">$' + b.amt.toLocaleString('en-US',{minimumFractionDigits:2}) + '</td>' +
+        '<td style="padding:8px 6px;text-align:center"><span style="color:' + uc + ';font-weight:700">' + b.daysLeft + 'd</span></td>' +
+        '<td style="padding:8px 10px;text-align:center;font-size:11px">' + ai + '</td></tr>';
+    });
+  }
+
+  // Cash sufficiency — can we cover EVERYTHING this month?
+  var sbox = document.getElementById('sufficiency-box');
+  if (sbox) {
+    var tCash = 42518;
+    var totalCC = 0, totalBills = 0;
+    cards.forEach(function(c) { totalCC += c.bal; });
+    bills.forEach(function(b) { totalBills += b.amt; });
+    var totalOwed = totalCC + totalBills;
+    var margin = tCash - totalOwed;
+    var covered = margin > 0;
+    var pct = (totalOwed / tCash * 100).toFixed(0);
+
+    var sh = '';
+    // Big verdict
+    sh += '<div style="text-align:center;padding:12px 0 8px">';
+    if (covered && margin > 5000) {
+      sh += '<div style="font-size:28px;font-weight:800;color:var(--green)">YES</div>';
+      sh += '<div style="font-size:11px;color:var(--green);margin-top:2px">Comfortably covered</div>';
+    } else if (covered) {
+      sh += '<div style="font-size:28px;font-weight:800;color:var(--yellow)">YES (TIGHT)</div>';
+      sh += '<div style="font-size:11px;color:var(--yellow);margin-top:2px">Covered but watch spending</div>';
+    } else {
+      sh += '<div style="font-size:28px;font-weight:800;color:var(--red)">NO — SHORT</div>';
+      sh += '<div style="font-size:11px;color:var(--red);margin-top:2px">Need $' + Math.abs(margin).toLocaleString('en-US',{minimumFractionDigits:0}) + ' more</div>';
+    }
+    sh += '</div>';
+
+    // Breakdown bar
+    var barPct = Math.min(parseFloat(pct), 100);
+    var barColor = covered && margin > 5000 ? 'var(--green)' : covered ? 'var(--yellow)' : 'var(--red)';
+    sh += '<div style="background:var(--bg);border-radius:6px;height:8px;margin:8px 0;overflow:hidden">';
+    sh += '<div style="width:' + barPct + '%;height:100%;background:' + barColor + ';border-radius:6px;transition:width 0.3s"></div>';
+    sh += '</div>';
+
+    // Numbers
+    sh += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center;margin-top:8px">';
+    sh += '<div><div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px">Cash</div><div style="font-size:16px;font-weight:700;color:var(--green)">$' + tCash.toLocaleString() + '</div></div>';
+    sh += '<div><div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px">Total Owed</div><div style="font-size:16px;font-weight:700;color:var(--red)">$' + totalOwed.toLocaleString('en-US',{minimumFractionDigits:0}) + '</div>';
+    sh += '<div style="font-size:9px;color:var(--text-dim);margin-top:2px">CC: $' + totalCC.toLocaleString('en-US',{minimumFractionDigits:0}) + ' + Bills: $' + totalBills.toLocaleString('en-US',{minimumFractionDigits:0}) + '</div></div>';
+    sh += '<div><div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px">After All Paid</div><div style="font-size:16px;font-weight:700;color:' + (covered ? 'var(--green)' : 'var(--red)') + '">$' + margin.toLocaleString('en-US',{minimumFractionDigits:0}) + '</div></div>';
+    sh += '</div>';
+
+    sbox.innerHTML = sh;
+  }
+
+  // Combine cards + bills for upcoming alerts
+  var allUpcoming = [];
+  cards.forEach(function(c) { if (c.daysLeft <= 7 && c.bal > 0) allUpcoming.push({name:c.name, amt:c.bal, daysLeft:c.daysLeft, from:c.from}); });
+  bills.forEach(function(b) { if (b.daysLeft <= 7) allUpcoming.push({name:b.name, amt:b.amt, daysLeft:b.daysLeft, from:b.from}); });
+  allUpcoming.sort(function(a,b) { return a.daysLeft - b.daysLeft; });
+
   var upcoming = cards.filter(function(c) { return c.daysLeft <= 7 && c.bal > 0; });
   var ab = document.getElementById('alert-box');
   if (!ab) return;
-  if (upcoming.length === 0) {
+  if (allUpcoming.length === 0) {
     ab.innerHTML = '<div style="text-align:center;color:var(--green);font-weight:600;padding:8px">No payments due in next 7 days</div>';
   } else {
     var td2 = 0, h = '';
-    upcoming.forEach(function(c) {
-      td2 += c.bal;
-      var dd = new Date(today); dd.setDate(dd.getDate() + c.daysLeft);
+    allUpcoming.forEach(function(item) {
+      td2 += item.amt;
+      var dd = new Date(today); dd.setDate(dd.getDate() + item.daysLeft);
       var ds = dd.toLocaleDateString('en-US',{month:'short',day:'numeric'});
       h += '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;' + (h ? 'border-top:1px solid var(--border);' : '') + '">' +
-        '<div><span style="font-weight:600;font-size:13px">' + c.name + '</span>' +
-        '<span style="color:var(--text-dim);font-size:11px;margin-left:8px">' + ds + ' \u00b7 ' + c.from + '</span></div>' +
-        '<div style="font-weight:700;font-size:13px;color:var(--red)">$' + c.bal.toLocaleString('en-US',{minimumFractionDigits:2}) + '</div></div>';
+        '<div><span style="font-weight:600;font-size:13px">' + item.name + '</span>' +
+        '<span style="color:var(--text-dim);font-size:11px;margin-left:8px">' + ds + ' · ' + item.from + '</span></div>' +
+        '<div style="font-weight:700;font-size:13px;color:var(--red)">$' + item.amt.toLocaleString('en-US',{minimumFractionDigits:2}) + '</div></div>';
     });
-    var ca = 42518, mg = ca - td2, cv = mg > 0;
+    var ca = 42518, mg7 = ca - td2, cv7 = mg7 > 0;
     h += '<div style="border-top:2px solid var(--border);margin-top:6px;padding-top:8px;display:flex;justify-content:space-between;font-size:13px;font-weight:700">' +
       '<span>Total due in 7 days</span><span style="color:var(--red)">$' + td2.toLocaleString('en-US',{minimumFractionDigits:2}) + '</span></div>';
     h += '<div style="margin-top:6px;padding:6px 10px;border-radius:6px;font-size:12px;font-weight:700;text-align:center;' +
-      (cv ? 'background:rgba(34,197,94,0.1);color:var(--green)">Covered? Yes ($' + mg.toLocaleString('en-US',{minimumFractionDigits:0}) + ' margin)' :
-      'background:rgba(239,68,68,0.1);color:var(--red)">Short by $' + Math.abs(mg).toLocaleString('en-US',{minimumFractionDigits:0})) + '</div>';
+      (cv7 ? 'background:rgba(34,197,94,0.1);color:var(--green)">Covered — $' + mg7.toLocaleString('en-US',{minimumFractionDigits:0}) + ' remaining after' :
+      'background:rgba(239,68,68,0.1);color:var(--red)">Short by $' + Math.abs(mg7).toLocaleString('en-US',{minimumFractionDigits:0})) + '</div>';
     ab.innerHTML = h;
   }
 
   var hb = document.getElementById('health-box');
   if (!hb) return;
-  var tDebt = 11085, tCash = 42518;
+  var billsTotal = 0; bills.forEach(function(b){ billsTotal += b.amt; });
+  var ccTotal = 0; cards.forEach(function(c){ ccTotal += c.bal; });
+  var tDebt = Math.round(ccTotal + billsTotal), tCash = 42518;
   var ratio = (tDebt / tCash * 100).toFixed(1);
   var rc = ratio < 30 ? 'var(--green)' : ratio < 60 ? 'var(--yellow)' : 'var(--red)';
-  var sc = cards.filter(function(c){return c.stale;});
-  var uc2 = cards.filter(function(c){return !c.confirmed;});
+  var afterPaid = tCash - tDebt;
+  var apc = afterPaid > 5000 ? 'var(--green)' : afterPaid > 0 ? 'var(--yellow)' : 'var(--red)';
   hb.innerHTML = '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;text-align:center">' +
-    '<div><div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px">Debt/Cash</div>' +
+    '<div><div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px">Owed/Cash</div>' +
     '<div style="font-size:20px;font-weight:700;color:' + rc + ';margin-top:2px">' + ratio + '%</div>' +
     '<div style="font-size:10px;color:var(--text-dim)">$' + tDebt.toLocaleString() + ' / $' + tCash.toLocaleString() + '</div></div>' +
-    '<div><div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px">Stale</div>' +
-    '<div style="font-size:20px;font-weight:700;color:' + (sc.length>0?'var(--red)':'var(--green)') + ';margin-top:2px">' + sc.length + '</div>' +
-    '<div style="font-size:10px;color:var(--text-dim)">' + (sc.length>0?'BILT disabled':'All active') + '</div></div>' +
-    '<div><div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px">Unconfirmed</div>' +
-    '<div style="font-size:20px;font-weight:700;color:' + (uc2.length>0?'var(--yellow)':'var(--green)') + ';margin-top:2px">' + uc2.length + '</div>' +
-    '<div style="font-size:10px;color:var(--text-dim)">due dates</div></div></div>';
+    '<div><div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px">After All Paid</div>' +
+    '<div style="font-size:20px;font-weight:700;color:' + apc + ';margin-top:2px">$' + afterPaid.toLocaleString() + '</div>' +
+    '<div style="font-size:10px;color:var(--text-dim)">' + (afterPaid > 5000 ? 'Comfortable' : afterPaid > 0 ? 'Tight' : 'Deficit') + '</div></div>' +
+    '<div><div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px">Tracking</div>' +
+    '<div style="font-size:20px;font-weight:700;color:var(--blue);margin-top:2px">' + (cards.length + bills.length) + '</div>' +
+    '<div style="font-size:10px;color:var(--text-dim)">' + cards.length + ' cards + ' + bills.length + ' bills</div></div></div>';
 
   var banner = document.getElementById('cash-banner');
   if (banner) {
