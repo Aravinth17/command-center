@@ -228,7 +228,7 @@ body {
     <h1>Command Center</h1>
     <div class="last-updated">
       <span class="status-dot"></span>
-      <span id="last-sync">Updated Apr 5, 2026 · Evening Recap</span>
+      <span id="last-sync">Updated Apr 6, 2026 · Bills Refresh</span>
     </div>
   </div>
   <div class="tabs" id="tabs">
@@ -1246,6 +1246,19 @@ body {
 
   <!-- BILLS -->
   <div class="tab-panel" id="panel-bills">
+    <!-- APRIL EXPENSE STATS -->
+    <div class="stats-row">
+      <div class="card">
+        <div class="card-label">APR REMAINING</div>
+        <div class="card-value" style="font-size:22px">$3,729</div>
+        <div class="card-sub">23 bills upcoming</div>
+      </div>
+      <div class="card">
+        <div class="card-label">PAID THIS MONTH</div>
+        <div class="card-value" style="font-size:22px">$159</div>
+        <div class="card-sub">Apple + Amazon · Apr 1–2</div>
+      </div>
+    </div>
     <!-- CASH POSITION BANNER -->
     <div class="card" id="cash-banner" style="border-left:3px solid var(--green);background:linear-gradient(135deg, rgba(34,197,94,0.08), transparent)">
       <div class="card-label">LIQUID CASH</div>
@@ -1305,17 +1318,19 @@ body {
     <div class="card" id="alert-box"></div>
 
     <!-- SUBSCRIPTIONS -->
-    <div class="section-title">Subscriptions (~$500/mo)</div>
+    <div class="section-title">Key Monthly Recurring (Apr)</div>
     <div class="card">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;font-size:12px">
-        <div><span style="color:var(--text-dim)">Entertainment</span><br><span style="font-weight:600">AMC x2, Cinemark x2, Sling, Peacock, Audible</span></div>
-        <div><span style="color:var(--text-dim)">Phone &amp; Internet</span><br><span style="font-weight:600">$156/mo</span></div>
-        <div><span style="color:var(--text-dim)">AI / LLM</span><br><span style="font-weight:600">$52/mo (Apple + GCloud)</span></div>
-        <div><span style="color:var(--text-dim)">Sister Expenses</span><br><span style="font-weight:600">$70–90/mo</span></div>
+        <div><span style="color:var(--text-dim)">Entertainment</span><br><span style="font-weight:600">AMC $24.43 · Cinemark $9.99 · Sling $10</span></div>
+        <div><span style="color:var(--text-dim)">Phone &amp; Internet</span><br><span style="font-weight:600">Apple $100.66 · AT&amp;T $110.70</span></div>
+        <div><span style="color:var(--text-dim)">AI / LLM</span><br><span style="font-weight:600">Apple $41.58 · PayPal ~$42</span></div>
+        <div><span style="color:var(--text-dim)">Shopping / Loans</span><br><span style="font-weight:600">Afterpay ~$181 · Klarna ~$71 · Walmart+ $14.16</span></div>
+        <div><span style="color:var(--text-dim)">Sister Expenses</span><br><span style="font-weight:600">Amazon ~$16.48 ✓ paid</span></div>
+        <div><span style="color:var(--text-dim)">Other</span><br><span style="font-weight:600">Tesla $9.99 · WSJ $4 · Lemonade $6.34 · Storage $21.29</span></div>
       </div>
       <div style="border-top:1px solid var(--border);margin-top:10px;padding-top:8px;display:flex;justify-content:space-between;font-size:13px;font-weight:700">
-        <span style="color:var(--text-dim)">Monthly Total</span>
-        <span>~$490–510</span>
+        <span style="color:var(--text-dim)">Total Expenses (Apr)</span>
+        <span>$3,887.63 · $158.72 paid</span>
       </div>
     </div>
 
@@ -1325,7 +1340,7 @@ body {
 
     <div class="card" style="margin-top:8px;border:1px dashed var(--border);background:transparent">
       <div class="card-sub" style="color:var(--text-dim);line-height:1.6;text-align:center">
-        Data from Monarch Money · Apr 3, 2026 · 8 cards tracked · Income: $31,281 received · Chase College is primary pay account
+        Data from Monarch Money · Apr 6, 2026 · 8 cards tracked · Apr income: $12,380 expected (none received yet) · $158.72 paid · $3,729 remaining · Chase College is primary pay account
       </div>
     </div>
   </div>
@@ -1712,7 +1727,7 @@ document.querySelectorAll('.list-item, .card').forEach(el => {
 </script>
 <script>
 (function buildAmIBroke() {
-  var today = new Date(2026, 3, 4);
+  var today = new Date(2026, 3, 6);
   var cards = [
     { name: 'Apple Card', bal: 1105.67, due: 31, confirmed: true, auto: 'Yes', from: 'Chase College' },
     { name: 'Citi Cash ...1534', bal: 84.76, due: 27, confirmed: true, auto: 'Yes', from: 'Chase College' },
@@ -1738,7 +1753,8 @@ document.querySelectorAll('.list-item, .card').forEach(el => {
   var bills = [
     { name: 'Rent (Graham / Conservice)', amt: 3547.59, due: 1, auto: 'No', from: 'Chase College', type: 'rent' },
     { name: 'Car Insurance (Wells Fargo)', amt: 896.44, due: 1, auto: 'Yes', from: 'Checking', type: 'insurance' },
-    { name: 'PG&E', amt: 95.32, due: 11, auto: 'Yes', from: 'Chase College', type: 'utility' },
+    { name: 'PG&E (Gas)', amt: 43.41, due: 11, auto: 'Yes', from: 'Chase College', type: 'utility' },
+    { name: 'PG&E (Electric)', amt: 104.03, due: 11, auto: 'Yes', from: 'Chase College', type: 'utility' },
     { name: 'Official Checks Fee', amt: 10.00, due: 28, auto: 'Yes', from: 'Chase College', type: 'fee' }
   ];
 
