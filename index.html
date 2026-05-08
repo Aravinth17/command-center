@@ -228,7 +228,7 @@ body {
     <h1>Command Center</h1>
     <div class="last-updated">
       <span class="status-dot"></span>
-      <span id="last-sync">Updated May 8, 2026 · Leo</span>
+      <span id="last-sync">Updated May 8, 2026 · 11:30 PM PT · Leo (evening recap)</span>
     </div>
   </div>
   <div class="tabs" id="tabs">
@@ -346,9 +346,36 @@ body {
       <div class="list-icon" style="background:rgba(34,197,94,0.15)">🎾</div>
       <div class="list-body">
         <div class="list-title">Kalshi Tennis — Borges vs Jodar (Combo leg) WIN 🆕</div>
-        <div class="list-detail">41 contracts on Jodar · $41 payout. Combo also paid out earlier today (Zverev/Jodar/Musetti/Djokovic/Ruud/Rybakina/Swiatek combo · 48 contracts).</div>
+        <div class="list-detail">41 contracts on Jodar · $41 payout. (Note: 7-leg combo with Jodar/Zverev/Musetti/Djokovic/Ruud/Rybakina/Swiatek separately settled NO this afternoon — see below.)</div>
       </div>
       <div class="list-right"><span class="badge badge-done">+$41</span></div>
+    </div>
+
+    <div class="list-item" style="border-left:3px solid var(--red)">
+      <div class="list-icon" style="background:rgba(239,68,68,0.15)">🎾</div>
+      <div class="list-body">
+        <div class="list-title">Kalshi Tennis — 7-Leg Combo LOSS 🆕 (evening)</div>
+        <div class="list-detail">48 contracts on Zverev/Jodar/Musetti/Djokovic/Ruud/Rybakina/Swiatek combo · settled NO at 11:12 AM PT · $0 payout. At least one leg failed.</div>
+      </div>
+      <div class="list-right"><span class="badge badge-urgent">-$48</span></div>
+    </div>
+
+    <div class="list-item" style="border-left:3px solid var(--yellow)">
+      <div class="list-icon" style="background:rgba(234,179,8,0.15)">🎾</div>
+      <div class="list-body">
+        <div class="list-title">Tennis Reconciliation Backlog (evening)</div>
+        <div class="list-detail">40 unreconciled predictions in DB (30 from 5/7 Rome, 6 from 5/6 Rome, 1 from 5/5 Istanbul, 3 older). Sofascore API returned HTTP 403 — fetch-outcomes deferred to tomorrow's cycle.</div>
+      </div>
+      <div class="list-right"><span class="badge badge-soon">Defer</span></div>
+    </div>
+
+    <div class="list-item" style="border-left:3px solid var(--blue)">
+      <div class="list-icon" style="background:rgba(59,130,246,0.15)">🗓️</div>
+      <div class="list-body">
+        <div class="list-title">Tomorrow (Sat 5/9) — America's Tire 12:30 PM</div>
+        <div class="list-detail">536 E Brokaw Rd, San Jose. Only event on the calendar.</div>
+      </div>
+      <div class="list-right"><span class="badge badge-soon">Tomorrow</span></div>
     </div>
     <div class="list-item" style="border-left:3px solid var(--green)">
       <div class="list-icon" style="background:rgba(34,197,94,0.15)">💰</div>
@@ -953,8 +980,8 @@ body {
     <div class="stats-row">
       <div class="card">
         <div class="card-label">Total Record</div>
-        <div class="card-value balance-positive">116W–33L</div>
-        <div class="card-sub">77.8% win rate</div>
+        <div class="card-value balance-positive">119W–34L</div>
+        <div class="card-sub">77.8% win rate · +3W/+1L tonight</div>
       </div>
       <div class="card">
         <div class="card-label">Gross Payouts</div>
@@ -987,11 +1014,11 @@ body {
     <div class="card" style="border-left:3px solid var(--blue)">
       <div style="display:flex;justify-content:space-between;align-items:center">
         <div>
-          <div style="font-size:16px;font-weight:700" class="balance-positive">57W – 33L</div>
-          <div class="card-sub">63.3% win rate · Apr 12-19 added (+0W/+10L net)</div>
+          <div style="font-size:16px;font-weight:700" class="balance-positive">60W – 34L</div>
+          <div class="card-sub">63.8% win rate · May 8 evening: +3W (Jodar $41, Shnaider $34, Khachanov $45) +1L (7-leg combo $48)</div>
         </div>
         <div style="text-align:right">
-          <div style="font-size:18px;font-weight:700" class="balance-positive">$2,082</div>
+          <div style="font-size:18px;font-weight:700" class="balance-positive">$2,202</div>
           <div class="card-sub">gross payout (cash basis)</div>
         </div>
       </div>
@@ -1004,6 +1031,22 @@ body {
     </div>
 
     <div class="section-title">Recent Settlements</div>
+    <div class="list-item">
+      <div class="list-icon" style="background:rgba(239,68,68,0.15)">❌</div>
+      <div class="list-body">
+        <div class="list-title">Kalshi Tennis — 7-Leg Combo LOSS 🆕</div>
+        <div class="list-detail">May 8 · 48 contracts · Zverev/Jodar/Musetti/Djokovic/Ruud/Rybakina/Swiatek · Settled NO · $0 payout</div>
+      </div>
+      <div class="list-right"><div class="list-date">May 8</div></div>
+    </div>
+    <div class="list-item">
+      <div class="list-icon" style="background:rgba(34,197,94,0.15)">✅</div>
+      <div class="list-body">
+        <div class="list-title">Khachanov / Shnaider / Jodar 🆕</div>
+        <div class="list-detail">May 8 · 3W on Kalshi tennis singles · $45 + $34 + $41 = $120 gross</div>
+      </div>
+      <div class="list-right"><div class="list-date">May 8</div></div>
+    </div>
     <div class="list-item">
       <div class="list-icon" style="background:rgba(34,197,94,0.15)">✅</div>
       <div class="list-body">
@@ -1745,17 +1788,25 @@ body {
 
   <!-- BILLS -->
   <div class="tab-panel" id="panel-bills">
-    <!-- APRIL EXPENSE STATS -->
+    <!-- MONARCH SYNC BLOCKED BANNER -->
+    <div class="card" style="border-left:3px solid var(--yellow);background:linear-gradient(135deg, rgba(234,179,8,0.10), transparent)">
+      <div class="card-label" style="color:var(--yellow)">⚠ MONARCH SYNC BLOCKED — STALE DATA</div>
+      <div class="card-sub" style="margin-top:6px;line-height:1.5">
+        Scheduled refresh ran <strong style="color:var(--text)">May 8, 2026</strong> but Monarch session was expired. Numbers below carry over from the last successful sync (Apr 7, 2026). <strong style="color:var(--yellow)">Action:</strong> Log in at <a href="https://app.monarch.com" style="color:var(--blue)">app.monarch.com</a>, then re-run <code>monarch-bills-refresh</code>.
+      </div>
+    </div>
+
+    <!-- MAY EXPENSE STATS (STALE) -->
     <div class="stats-row">
       <div class="card">
-        <div class="card-label">APR REMAINING</div>
+        <div class="card-label">LAST KNOWN REMAINING</div>
         <div class="card-value" style="font-size:22px">$3,729</div>
-        <div class="card-sub">23 bills upcoming</div>
+        <div class="card-sub">As of Apr 7 sync · stale</div>
       </div>
       <div class="card">
-        <div class="card-label">PAID THIS MONTH</div>
-        <div class="card-value" style="font-size:22px">$159</div>
-        <div class="card-sub">Apple + Amazon · Apr 1–2</div>
+        <div class="card-label">LAST SYNC</div>
+        <div class="card-value" style="font-size:22px">Apr 7</div>
+        <div class="card-sub">31 days ago · login required</div>
       </div>
     </div>
     <!-- CASH POSITION BANNER -->
