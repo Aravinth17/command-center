@@ -1868,7 +1868,7 @@ body {
     <div class="card" id="alert-box"></div>
 
     <!-- SUBSCRIPTIONS -->
-    <div class="section-title">Key Monthly Recurring (Apr)</div>
+    <div class="section-title">Key Monthly Recurring (May · stale)</div>
     <div class="card">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;font-size:12px">
         <div><span style="color:var(--text-dim)">Entertainment</span><br><span style="font-weight:600">AMC $24.43 · Cinemark $9.99 · Sling $10</span></div>
@@ -1879,7 +1879,7 @@ body {
         <div><span style="color:var(--text-dim)">Other</span><br><span style="font-weight:600">Tesla $9.99 · WSJ $4 · Lemonade $6.34 · Storage $21.29</span></div>
       </div>
       <div style="border-top:1px solid var(--border);margin-top:10px;padding-top:8px;display:flex;justify-content:space-between;font-size:13px;font-weight:700">
-        <span style="color:var(--text-dim)">Total Expenses (Apr)</span>
+        <span style="color:var(--text-dim)">Total Expenses (Apr · last sync)</span>
         <span>$3,887.63 · $158.72 paid</span>
       </div>
     </div>
@@ -1890,7 +1890,7 @@ body {
 
     <div class="card" style="margin-top:8px;border:1px dashed var(--border);background:transparent">
       <div class="card-sub" style="color:var(--text-dim);line-height:1.6;text-align:center">
-        Data from Monarch Money · Apr 7, 2026 · 8 cards tracked · Apr income: $12,380 expected (none received yet) · $158.72 paid · $3,729 remaining · Chase College is primary pay account
+        Last successful Monarch pull: Apr 7, 2026 · 8 cards tracked · Refresh attempted May 8, 2026 — Monarch session expired (login required) · Re-run <code>monarch-bills-refresh</code> after sign-in to populate fresh May figures
       </div>
     </div>
   </div>
@@ -2255,7 +2255,7 @@ document.querySelectorAll('.list-item, .card').forEach(el => {
 </script>
 <script>
 (function buildAmIBroke() {
-  var today = new Date(2026, 3, 8);
+  var today = new Date(2026, 4, 8);
   var cards = [
     { name: 'Apple Card', bal: 1105.67, due: 31, confirmed: true, auto: 'Yes', from: 'Chase College' },
     { name: 'Citi Cash ...1534', bal: 84.76, due: 27, confirmed: true, auto: 'Yes', from: 'Chase College' },
