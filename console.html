@@ -1,0 +1,44 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tennis Console</title><style>
+body{background:#0d1117;color:#e6edf3;font:14px -apple-system,system-ui;margin:0;padding:16px}
+h1{font-size:18px;margin:0 0 4px} h2{font-size:13px;color:#7d8590;text-transform:uppercase;margin:18px 0 6px}
+table{border-collapse:collapse;width:100%} td,th{padding:5px 8px;border-bottom:1px solid #21262d;text-align:left;font-size:13px}
+.b{padding:1px 7px;border-radius:9px;font-size:11px} .ok{background:#1a7f37;color:#fff} .bad{background:#b62324;color:#fff}
+.warn{background:#9e6a03;color:#fff} .arch{color:#7d8590;font-size:11px}
+.strip{display:flex;gap:14px;flex-wrap:wrap;background:#161b22;padding:10px 12px;border-radius:8px;margin:6px 0}
+.kpi b{font-size:16px} .kpi span{color:#7d8590;font-size:11px;display:block}
+button{background:#238636;color:#fff;border:0;padding:8px 14px;border-radius:6px;font-size:13px;margin-top:8px}
+#out{background:#161b22;padding:8px;border-radius:6px;font-family:monospace;font-size:12px;margin-top:6px;min-height:18px}
+</style></head><body>
+<h1>🎾 Tennis Console <span style="color:#7d8590;font-size:12px">rendered 2026-06-10 18:34 PT</span></h1>
+
+<h2>Ledger</h2><div class="strip">
+<div class="kpi"><b>$+152</b><span>June wallet</span></div>
+<div class="kpi"><b>33–25</b><span>wallet W–L ($-70 life)</span></div>
+<div class="kpi"><b>66–61</b><span>book W–L (paper)</span></div>
+<div class="kpi"><b>$2,430</b><span>equity / HWM $2,500</span></div>
+<div class="kpi"><span class="b ok">ladder ×1.0 — normal</span><span>dd $70 · 7d $+177</span></div></div>
+
+<h2>Card — confirm placements (tap, then copy the line to Leo)</h2>
+<table><tr><th>date</th><th>pick</th><th>tourn</th><th>verdict</th><th>stake</th><th>entry</th><th>fair</th><th>archetype</th><th>status</th></tr>
+<tr><td>2026-06-10</td><td><b>Marin Cilic</b> v Nuno Borges</td><td>'s-Hertogenbosch</td><td>LEAN</td><td>0.75U</td><td>52¢</td><td>61.0</td><td class="arch">surface_elo_edge</td><td>✅ placed</td></tr><tr><td>2026-06-10</td><td><b>Emma Raducanu</b> v Sorana Cirstea</td><td>Queen's Club (London)</td><td>LEAN</td><td>0.75U</td><td>47¢</td><td>55.0</td><td class="arch">surface_transition_fade</td><td>✅ placed</td></tr><tr><td>2026-06-10</td><td><b>Katie Boulter</b> v Jaqueline Cristian</td><td>Queen's Club (London)</td><td>LEAN</td><td>0.75U</td><td>58¢</td><td>59.0</td><td class="arch">surface_elo_edge</td><td>✅ placed</td></tr><tr><td>2026-06-10</td><td><b>Adrian Mannarino</b> v Arthur Rinderknech</td><td>'s-Hertogenbosch</td><td>LEAN</td><td>0.5U</td><td>41¢</td><td>48.5</td><td class="arch">live_dog_matchup</td><td>✅ placed</td></tr><tr><td>2026-06-10</td><td><b>Tatjana Maria</b> v Elena Rybakina</td><td>Queen's Club (London)</td><td>LEAN</td><td>0.5U</td><td>24¢</td><td>34.0</td><td class="arch">live_dog_matchup</td><td>✅ placed</td></tr></table>
+<button onclick="build()">Build confirmation line</button><div id="out"></div>
+
+<h2>Pending settles (6)</h2>
+<table><tr><td>2026-06-08</td><td>Mika Stojsavljevic v Marta Kostyuk</td><td>$12.50 @ 16¢</td></tr><tr><td>2026-06-10</td><td>Adrian Mannarino v Arthur Rinderknech</td><td>$25.00 @ 41¢</td></tr><tr><td>2026-06-10</td><td>Marin Cilic v Nuno Borges</td><td>$37.50 @ 52¢</td></tr><tr><td>2026-06-10</td><td>Tatjana Maria v Elena Rybakina</td><td>$25.00 @ 24¢</td></tr><tr><td>2026-06-10</td><td>Emma Raducanu v Sorana Cirstea</td><td>$37.50 @ 47¢</td></tr><tr><td>2026-06-10</td><td>Katie Boulter v Jaqueline Cristian</td><td>$37.50 @ 58¢</td></tr></table>
+
+<h2>Health</h2><div class="strip">
+<div class="kpi"><span class="b ok">OK</span><span>price tape (108 mkts, 2026-06-11T01:06:07Z)</span></div>
+<div class="kpi"><span class="b ok">OK</span><span>TR Elo sync</span></div>
+<div class="kpi"><span class="b ok">OK</span><span>intel 24h (1193 items)</span></div>
+<div class="kpi"><span class="b bad">36 stuck</span><span>retro queue</span></div>
+<div class="kpi"><b>0–0</b><span>challenger test (0/100)</span></div></div>
+
+<script>
+function build(){let p=[],d=[];
+document.querySelectorAll('.pl:checked').forEach(c=>p.push(c.dataset.n));
+document.querySelectorAll('.dc:checked').forEach(c=>d.push(c.dataset.n+'(reason?)'));
+let s='';if(p.length)s+='PLACED: '+p.join(', ')+'. ';if(d.length)s+='DECLINED: '+d.join(', ')+'.';
+document.getElementById('out').textContent=s||'(nothing selected)';
+if(s&&navigator.clipboard)navigator.clipboard.writeText(s);}
+</script></body></html>
