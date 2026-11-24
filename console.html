@@ -1,45 +1,126 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Tennis Console</title><style>
-body{background:#0d1117;color:#e6edf3;font:14px -apple-system,system-ui;margin:0;padding:16px}
-h1{font-size:18px;margin:0 0 4px} h2{font-size:13px;color:#7d8590;text-transform:uppercase;margin:18px 0 6px}
-table{border-collapse:collapse;width:100%} td,th{padding:5px 8px;border-bottom:1px solid #21262d;text-align:left;font-size:13px}
-.b{padding:1px 7px;border-radius:9px;font-size:11px} .ok{background:#1a7f37;color:#fff} .bad{background:#b62324;color:#fff}
-.warn{background:#9e6a03;color:#fff} .arch{color:#7d8590;font-size:11px}
-.strip{display:flex;gap:14px;flex-wrap:wrap;background:#161b22;padding:10px 12px;border-radius:8px;margin:6px 0}
-.kpi b{font-size:16px} .kpi span{color:#7d8590;font-size:11px;display:block}
-button{background:#238636;color:#fff;border:0;padding:8px 14px;border-radius:6px;font-size:13px;margin-top:8px}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tennis Console — Net-of-Fee Telemetry &amp; Health</title>
+<style>
+body{background:#0d1117;color:#e6edf3;font:14px/1.45 -apple-system,BlinkMacSystemFont,system-ui,sans-serif;margin:0;padding:16px 20px;max-width:1320px}
+h1{font-size:19px;margin:0 0 6px}
+h2{font-size:12px;color:#8b949e;text-transform:uppercase;letter-spacing:.06em;margin:20px 0 8px;border-bottom:1px solid #21262d;padding-bottom:4px}
+h3{font-size:12px;color:#c9d1d9;margin:10px 0 6px}
+table{border-collapse:collapse;width:100%;background:#161b22;border-radius:8px;overflow:hidden;margin-bottom:8px}
+td,th{padding:6px 9px;border-bottom:1px solid #21262d;text-align:left;font-size:12.5px;vertical-align:top}
+th{color:#8b949e;font-weight:600;background:#13171e}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px;margin:8px 0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:12px;margin:8px 0}
+.card{background:#161b22;border:1px solid #21262d;border-radius:8px;padding:10px 12px}
+.card .lbl{font-size:11px;color:#8b949e;text-transform:uppercase;letter-spacing:.04em}
+.card .val{font-size:19px;font-weight:700;margin:3px 0}
+.card .sub{font-size:11.5px;color:#8b949e}
+.strip{display:flex;gap:14px;flex-wrap:wrap;background:#161b22;border:1px solid #21262d;padding:10px 12px;border-radius:8px;margin:6px 0}
+.kpi b{font-size:15px} .kpi span{color:#8b949e;font-size:11px;display:block}
+.b{display:inline-block;padding:1px 7px;border-radius:9px;font-size:11px;font-weight:600}
+.ok{background:#1a7f37;color:#fff} .bad{background:#b62324;color:#fff} .warn{background:#9e6a03;color:#fff}
+.pos{color:#3fb950} .neg{color:#f85149} .neu{color:#e6edf3}
+.muted,.arch{color:#8b949e;font-size:11.5px}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
+.note{background:#131922;border-left:3px solid #388bfd;padding:7px 10px;border-radius:4px;font-size:12px;color:#c9d1d9;margin:6px 0 10px}
+button{background:#238636;color:#fff;border:0;padding:8px 14px;border-radius:6px;font-size:13px;margin-top:8px;cursor:pointer}
 #out{background:#161b22;padding:8px;border-radius:6px;font-family:monospace;font-size:12px;margin-top:6px;min-height:18px}
-</style></head><body>
-<h1>🎾 Tennis Console <span style="color:#7d8590;font-size:12px">rendered 2026-06-10 23:01 PT</span></h1>
+</style>
+</head>
+<body>
+<h1>🎾 Tennis Console <span class="muted">rendered 2026-11-23 17:02 PT · read-only DB · fee convention KALSHI-2026-07-07-CENTICENT</span></h1>
 
-<h2>Ledger</h2><div class="strip">
-<div class="kpi"><b>$+152</b><span>June wallet</span></div>
-<div class="kpi"><b>33–25</b><span>wallet W–L ($-70 life)</span></div>
-<div class="kpi"><b>66–61</b><span>book W–L (paper)</span></div>
-<div class="kpi"><b>$2,430</b><span>equity / HWM $2,500</span></div>
-<div class="kpi"><span class="b ok">ladder ×1.0 — normal</span><span>dd $70 · 7d $+177</span></div></div>
+<h2>1. Strictly Separated Net-of-Kalshi-Fee P&amp;L Ledgers</h2>
+<div class="note">Ledgers are never commingled. All Kalshi taker fees use <code>KALSHI-2026-07-07-CENTICENT</code> via <code>pipeline.shadow_accounting</code>; <code>KILL_VINDICATED</code> annotations (2 rows) are excluded from shadow P&amp;L.</div>
+<div class="grid">
+  <div class="card">
+    <div class="lbl">A. Actual Trade Fills (Real Money)</div>
+    <div class="val neu">1 pending</div>
+    <div class="sub">0W–0L settled · 1 pending</div>
+    <div class="sub" style="margin-top:4px">Pavel Kotov vs Shintaro Mochizuki (Polymarket @ 48¢, USER_CONFIRMED_PENDING)</div>
+  </div>
+  <div class="card">
+    <div class="lbl">B. Legacy Assumed Fills (match_analysis grants)</div>
+    <div class="val neg">-2.37U (-2.92%)</div>
+    <div class="sub">98W–100L (198/204 grants) · stake 81.10U</div>
+    <div class="sub">Gross: +0.49U (+0.60%) · Fee drag: 3.52pp</div>
+  </div>
+  <div class="card">
+    <div class="lbl">C. Debate Shadow Papers (shadow_accounting)</div>
+    <div class="val neg">-3.83U (-2.22%)</div>
+    <div class="sub">303W–387L–13V–6P (709 true papers) · stake 172.50U</div>
+    <div class="sub">Gross: +2.87U (+1.66%) · Whole-cent: -5.87U · Drag: 3.88pp</div>
+  </div>
+  <div class="card">
+    <div class="lbl">D. WTAFAV Lane (KXWTAMATCH 50–70¢ Shadow)</div>
+    <div class="val pos">+0.25U (+4.54%)</div>
+    <div class="sub">14W–8L (22 decided) · stake 5.50U · 0 live fills</div>
+    <div class="sub">Gross: +0.41U (+7.53%) · CLV: +0.32pp (n=22)</div>
+  </div>
+</div>
+<div class="strip"><div class="kpi"><b>$2,533</b><span>legacy ladder equity / HWM $2,611</span></div><div class="kpi"><span class="b ok">ladder ×1.0 — normal</span><span>dd $77 · 7d $+0</span></div><div class="kpi"><span class="b ok">OK</span><span>price tape (254 mkts, 2026-11-24T00:33:34Z)</span></div><div class="kpi"><span class="b ok">OK</span><span>TR Elo sync</span></div><div class="kpi"><span class="b ok">OK</span><span>intel 24h (677 items)</span></div></div>
 
-<h2>Card — confirm placements (tap, then copy the line to Leo)</h2>
-<table><tr><th>date</th><th>pick</th><th>tourn</th><th>verdict</th><th>stake</th><th>entry</th><th>fair</th><th>archetype</th><th>status</th></tr>
-<tr><td>2026-06-10</td><td><b>Marin Cilic</b> v Nuno Borges</td><td>'s-Hertogenbosch</td><td>LEAN</td><td>0.75U</td><td>52¢</td><td>61.0</td><td class="arch">surface_elo_edge</td><td>✅ placed</td></tr><tr><td>2026-06-10</td><td><b>Emma Raducanu</b> v Sorana Cirstea</td><td>Queen's Club (London)</td><td>LEAN</td><td>0.75U</td><td>47¢</td><td>55.0</td><td class="arch">surface_transition_fade</td><td>✅ placed</td></tr><tr><td>2026-06-10</td><td><b>Katie Boulter</b> v Jaqueline Cristian</td><td>Queen's Club (London)</td><td>LEAN</td><td>0.75U</td><td>58¢</td><td>59.0</td><td class="arch">surface_elo_edge</td><td>✅ placed</td></tr><tr><td>2026-06-10</td><td><b>Adrian Mannarino</b> v Arthur Rinderknech</td><td>'s-Hertogenbosch</td><td>LEAN</td><td>0.5U</td><td>41¢</td><td>48.5</td><td class="arch">live_dog_matchup</td><td>✅ placed</td></tr><tr><td>2026-06-10</td><td><b>Tatjana Maria</b> v Elena Rybakina</td><td>Queen's Club (London)</td><td>LEAN</td><td>0.5U</td><td>24¢</td><td>34.0</td><td class="arch">live_dog_matchup</td><td>✅ placed</td></tr><tr><td>2026-06-11</td><td><b>Dayana Yastremska</b> v Ajla Tomljanovic</td><td>'s-Hertogenbosch</td><td>LEAN</td><td>0.75U</td><td>59¢</td><td>60.0</td><td class="arch">stat_edge_other</td><td>✅ placed</td></tr><tr><td>2026-06-11</td><td><b>Solana Sierra</b> v Caty McNally</td><td>'s-Hertogenbosch</td><td>LEAN</td><td>0.5U</td><td>33¢</td><td>45.0</td><td class="arch">live_dog_matchup</td><td>✅ placed</td></tr><tr><td>2026-06-11</td><td><b>Zeynep Sonmez</b> v Anastasia Potapova</td><td>'s-Hertogenbosch</td><td>LEAN</td><td>0.25U</td><td>36¢</td><td>47.0</td><td class="arch">surface_transition_fade</td><td>✅ placed</td></tr><tr><td>2026-06-11</td><td><b>Juan Pablo Guillen Meza</b> v Marco Cecchinato</td><td>Cattolica</td><td>LEAN</td><td>0.25U</td><td>32¢</td><td>43.0</td><td class="arch">surface_elo_edge</td><td>✅ placed</td></tr><tr><td>2026-06-11</td><td><b>Carlos Sanchez Jover</b> v Enrico Dalla Valle</td><td>Cattolica</td><td>LEAN</td><td>0.25U</td><td>38¢</td><td>45.0</td><td class="arch">surface_elo_edge</td><td>✅ placed</td></tr><tr><td>2026-06-11</td><td><b>Dane Sweeny</b> v Billy Harris</td><td>Ilkley</td><td>LEAN</td><td>0.25U</td><td>30¢</td><td>45.0</td><td class="arch">surface_elo_edge</td><td>✅ placed</td></tr><tr><td>2026-06-11</td><td><b>Lorenzo Romano</b> v Jack Pinnington Jones</td><td>Ilkley</td><td>LEAN</td><td>0.25U</td><td>30¢</td><td>50.0</td><td class="arch">qualifier_or_rhythm</td><td>✅ placed</td></tr><tr><td>2026-06-11</td><td><b>Hernan Casanova</b> v Genaro Alberto Justo</td><td>Tucuman</td><td>LEAN</td><td>0.25U</td><td>38¢</td><td>50.0</td><td class="arch">surface_elo_edge</td><td>✅ placed</td></tr><tr><td>2026-06-11</td><td><b>Oriol Roca Batalla</b> v Dusan Lajovic</td><td>Cattolica</td><td>LEAN</td><td>0.25U</td><td>34¢</td><td>44.0</td><td class="arch">surface_elo_edge</td><td>✅ placed</td></tr></table>
-<button onclick="build()">Build confirmation line</button><div id="out"></div>
+<h2>2. Rolling CLV Tracker (Closing Line Value)</h2>
+<div class="strip">
+  <div class="kpi"><b class="neg">-0.97pp</b><span>Last 30 papers (n=30, med -0.75pp)</span></div>
+  <div class="kpi"><b class="neg">-0.70pp</b><span>Last 100 papers (n=100, med -0.50pp)</span></div>
+  <div class="kpi"><b class="neg">-0.48pp</b><span>All debate_shadow (n=663, med -0.50pp)</span></div>
+  <div class="kpi"><b class="pos">+0.20pp</b><span>Legacy match_analysis CLV (n=288)</span></div>
+</div>
+<table>
+  <thead><tr><th>Month</th><th>Shadow W–L</th><th>Net CC P&amp;L</th><th>Net CC ROI</th><th>Mean CLV</th></tr></thead>
+  <tbody><tr><td class="mono">2026-11</td><td>104–189</td><td class="neg">-7.62U</td><td class="neg">-10.40%</td><td class="neg">-0.60pp (n=299)</td></tr><tr><td class="mono">2026-10</td><td>60–67</td><td class="pos">+9.71U</td><td class="pos">+30.58%</td><td class="neg">-0.85pp (n=121)</td></tr><tr><td class="mono">2026-09</td><td>87–51</td><td class="pos">+0.53U</td><td class="pos">+1.55%</td><td class="neg">-0.45pp (n=138)</td></tr><tr><td class="mono">2026-08</td><td>52–79</td><td class="neg">-6.21U</td><td class="neg">-18.95%</td><td class="pos">+0.24pp (n=105)</td></tr><tr><td class="mono">2026-07</td><td>0–1</td><td class="neg">-0.25U</td><td class="neg">-100.00%</td><td class="neu">— (n=0)</td></tr></tbody>
+</table>
 
-<h2>Pending settles (15)</h2>
-<table><tr><td>2026-06-08</td><td>Mika Stojsavljevic v Marta Kostyuk</td><td>$12.50 @ 16¢</td></tr><tr><td>2026-06-10</td><td>Adrian Mannarino v Arthur Rinderknech</td><td>$25.00 @ 41¢</td></tr><tr><td>2026-06-10</td><td>Marin Cilic v Nuno Borges</td><td>$37.50 @ 52¢</td></tr><tr><td>2026-06-10</td><td>Tatjana Maria v Elena Rybakina</td><td>$25.00 @ 24¢</td></tr><tr><td>2026-06-10</td><td>Emma Raducanu v Sorana Cirstea</td><td>$37.50 @ 47¢</td></tr><tr><td>2026-06-10</td><td>Katie Boulter v Jaqueline Cristian</td><td>$37.50 @ 58¢</td></tr><tr><td>2026-06-11</td><td>Dayana Yastremska v Ajla Tomljanovic</td><td>$37.50 @ 59¢</td></tr><tr><td>2026-06-11</td><td>Solana Sierra v Caty McNally</td><td>$25.00 @ 33¢</td></tr><tr><td>2026-06-11</td><td>Zeynep Sonmez v Anastasia Potapova</td><td>$12.50 @ 36¢</td></tr><tr><td>2026-06-11</td><td>Juan Pablo Guillen Meza v Marco Cecchinato</td><td>$12.50 @ 32¢</td></tr><tr><td>2026-06-11</td><td>Carlos Sanchez Jover v Enrico Dalla Valle</td><td>$12.50 @ 38¢</td></tr><tr><td>2026-06-11</td><td>Dane Sweeny v Billy Harris</td><td>$12.50 @ 30¢</td></tr><tr><td>2026-06-11</td><td>Lorenzo Romano v Jack Pinnington Jones</td><td>$12.50 @ 30¢</td></tr><tr><td>2026-06-11</td><td>Hernan Casanova v Genaro Alberto Justo</td><td>$12.50 @ 38¢</td></tr><tr><td>2026-06-11</td><td>Oriol Roca Batalla v Dusan Lajovic</td><td>$12.50 @ 34¢</td></tr></table>
+<h2>3. Shadow Brier Tracker — market_anchored_v1 vs Prod_v3_Sim vs Kalshi</h2>
+<table>
+  <thead><tr><th>Model / Benchmark</th><th>Scope &amp; Window</th><th>n</th><th>Brier ↓</th><th>Log-Loss ↓</th><th>Acc</th><th>Status</th></tr></thead>
+  <tbody><tr><td><b>market_anchored_v2</b></td><td class="muted">Locked holdout (2026-07-01..2026-11-22)</td><td class="mono">19588</td><td class="mono"><b>—</b></td><td class="mono">—</td><td class="mono">—</td><td><span class="b ok">SHADOW_CHAMPION_PROMOTED</span></td></tr><tr><td><b>market_anchored_v1</b></td><td class="muted">Locked holdout (2026-07-01..2026-11-22)</td><td class="mono">19498</td><td class="mono"><b>0.19641</b></td><td class="mono">0.57476</td><td class="mono">69.46%</td><td><span class="b ok">SHADOW_PRODUCTION_READY</span></td></tr><tr><td><b>Prod_Elo (baseline)</b></td><td class="muted">Same locked holdout (2026-07-01..2026-11-22)</td><td class="mono">19498</td><td class="mono"><b>0.20113</b></td><td class="mono">0.58656</td><td class="mono">—</td><td><span class="b warn">BASELINE</span></td></tr><tr><td><b>v9b_prod (shadow DB)</b></td><td class="muted">Prospective (2026-07-04..2026-09-16; 4770 logged)</td><td class="mono">242</td><td class="mono"><b>0.25278</b></td><td class="mono">—</td><td class="mono">—</td><td><span class="b ok">LIVE SHADOW</span></td></tr><tr><td><b>v9c_shadow (shadow DB)</b></td><td class="muted">Prospective (2026-07-04..2026-09-16; 4770 logged)</td><td class="mono">172</td><td class="mono"><b>0.22830</b></td><td class="mono">—</td><td class="mono">—</td><td><span class="b ok">LIVE SHADOW</span></td></tr><tr><td><b>market_anchored_v1 (live forward)</b></td><td class="muted">Prospective model_shadow_probs</td><td class="mono">0</td><td class="mono"><b>—</b></td><td class="mono">—</td><td class="mono">—</td><td><span class="b warn">PENDING 1ST CARD</span></td></tr><tr><td><b>Prod_v3_Sim</b></td><td class="muted">dossier_predictions settled</td><td class="mono">124</td><td class="mono"><b>0.25010</b></td><td class="mono">—</td><td class="mono">53.23%</td><td><span class="b warn">PROD SIM</span></td></tr><tr><td><b>Kalshi Entry (shadow)</b></td><td class="muted">debate_shadow decided papers</td><td class="mono">690</td><td class="mono"><b>0.19894</b></td><td class="mono">—</td><td class="mono">—</td><td><span class="b ok">MARKET BENCHMARK</span></td></tr><tr><td><b>Kalshi Close (shadow)</b></td><td class="muted">debate_shadow with close_cents</td><td class="mono">653</td><td class="mono"><b>0.20158</b></td><td class="mono">—</td><td class="mono">—</td><td><span class="b ok">MARKET BENCHMARK</span></td></tr><tr><td><b>Agent Fair (shadow)</b></td><td class="muted">debate_shadow agent fair_prob</td><td class="mono">667</td><td class="mono"><b>0.20241</b></td><td class="mono">—</td><td class="mono">—</td><td><span class="b warn">AGENT SHADOW</span></td></tr></tbody>
+</table>
 
-<h2>Health</h2><div class="strip">
-<div class="kpi"><span class="b ok">OK</span><span>price tape (132 mkts, 2026-06-11T05:49:47Z)</span></div>
-<div class="kpi"><span class="b ok">OK</span><span>TR Elo sync</span></div>
-<div class="kpi"><span class="b ok">OK</span><span>intel 24h (1696 items)</span></div>
-<div class="kpi"><span class="b bad">36 stuck</span><span>retro queue</span></div>
-<div class="kpi"><b>0–0</b><span>challenger test (0/100)</span></div>
-<div class="kpi"><span class="b ok">GREEN</span><span>articles (1%)</span></div><div class="kpi"><span class="b ok">GREEN</span><span>kalshi_paths (1%)</span></div></div>
+<h2>4. Today's Card — Confirm Placements (tap, then copy to Leo)</h2>
+<table>
+  <thead><tr><th>date</th><th>pick</th><th>tourn</th><th>verdict</th><th>stake</th><th>entry</th><th>fair</th><th>archetype</th><th>status</th></tr></thead>
+  <tbody><tr><td colspan="9" class="muted">no open bets</td></tr></tbody>
+</table>
+<button type="button" onclick="build()">Build confirmation line</button><div id="out"></div>
+
+<h2>5. Pending Settles (0)</h2>
+<table><tbody><tr><td class="muted">none</td></tr></tbody></table>
+
+<h2>6. pipeline.doctor — Database &amp; Operational Health <span class="b bad">UNHEALTHY (errors=9, warns=2)</span></h2>
+<div class="strip"><div class="kpi"><span class="b ok">GREEN</span><span>articles (1%)</span></div><div class="kpi"><span class="b ok">GREEN</span><span>body_fetch (1%)</span></div><div class="kpi"><span class="b ok">GREEN</span><span>kalshi_paths (1%)</span></div><div class="kpi"><span class="b ok">GREEN</span><span>reddit:r/EVbetting (1%)</span></div><div class="kpi"><span class="b ok">GREEN</span><span>reddit:r/TennisBetting (1%)</span></div><div class="kpi"><span class="b ok">GREEN</span><span>reddit:r/algobetting (1%)</span></div></div>
+<div class="grid2">
+  <div>
+    <h3>Database Health (17 checks)</h3>
+    <table>
+      <thead><tr><th>Status</th><th>Check</th><th>Detail</th></tr></thead>
+      <tbody><tr><td><span class="b ok">OK</span></td><td class="mono">foreign_keys</td><td>clean</td></tr><tr><td><span class="b ok">OK</span></td><td class="mono">match_analysis_insertable</td><td>insert under FK=ON works</td></tr><tr><td><span class="b ok">OK</span></td><td class="mono">tr_freshness</td><td>no recent players to probe</td></tr><tr><td><span class="b ok">OK</span></td><td class="mono">elo_compute_freshness</td><td>0/142 active players have Elo lagging their match data &gt;10d — Elo in sync with data</td></tr><tr><td><span class="b ok">OK</span></td><td class="mono">settle_window</td><td>no unsettled legacy placed picks; actual fills checked separately</td></tr><tr><td><span class="b warn">WARN</span></td><td class="mono">actual_fill_completeness</td><td>1 confirmed-fill records, 1 with incomplete entry/size/fee/contract evidence; 1 outcomes pending; no recommendation amounts inferred</td></tr><tr><td><span class="b ok">OK</span></td><td class="mono">measurement_loop</td><td>dry-run 2026-10-09: 1 picks, 5 rule fires</td></tr><tr><td><span class="b ok">OK</span></td><td class="mono">measurement_coverage</td><td>no settled non-PASS picks in 21d</td></tr><tr><td><span class="b ok">OK</span></td><td class="mono">intel_freshness</td><td>677 intel items in last 36h</td></tr><tr><td><span class="b ok">OK</span></td><td class="mono">wiki_freshness</td><td>wiki generated 2026-11-23T23:04:00; newest pick 2026-10-09T02:18:11 — fresh</td></tr><tr><td><span class="b ok">OK</span></td><td class="mono">pm_queue_depth</td><td>0 pending post-mortem(s), oldest ?d</td></tr><tr><td><span class="b ok">OK</span></td><td class="mono">tr_dup_triples</td><td>0 duplicate (player,date,rival) triples in 90d</td></tr><tr><td><span class="b ok">OK</span></td><td class="mono">facts_boilerplate</td><td>0/1668 last-7d facts are cross-player boilerplate (0.0%)</td></tr><tr><td><span class="b ok">OK</span></td><td class="mono">sackmann_horizon</td><td>Sackmann horizon 20260428 (upstream dead — H2H/career priors blind after this; absence-of-meeting after this date is UNKNOWN, not &#x27;never played&#x27;)</td></tr><tr><td><span class="b ok">OK</span></td><td class="mono">kalshi_tape</td><td>last snapshot 0.5h ago</td></tr><tr><td><span class="b ok">OK</span></td><td class="mono">elo_surface_freshness</td><td>0 per-surface Elo rows lag their match data &gt;10d</td></tr><tr><td><span class="b ok">OK</span></td><td class="mono">entry_capture_rate</td><td>last-7d sized picks: 0, missing odds-provenance 0, missing ticker 0</td></tr></tbody>
+    </table>
+  </div>
+  <div>
+    <h3>Operational Health (14 checks)</h3>
+    <table>
+      <thead><tr><th>Status</th><th>Check</th><th>Detail</th></tr></thead>
+      <tbody><tr><td><span class="b ok">OK</span></td><td class="mono">disk_free</td><td>62.1 GiB free</td></tr><tr><td><span class="b bad">FAIL</span></td><td class="mono">daily_freshness</td><td>latest run status=&#x27;failed&#x27;; stage_failures=[&#x27;card_cohort&#x27;, &#x27;twitter_intel&#x27;] (structured receipt)</td></tr><tr><td><span class="b bad">FAIL</span></td><td class="mono">source_failures</td><td>failed sources/stages: [&#x27;card_cohort&#x27;, &#x27;twitter_intel&#x27;] (structured receipt)</td></tr><tr><td><span class="b bad">FAIL</span></td><td class="mono">packet_prep</td><td>latest prep is for 2026-11-20; 2026-11-22 is due</td></tr><tr><td><span class="b ok">OK</span></td><td class="mono">weekly_backup</td><td>verified 1:55:55.789014 ago; 1238935380 bytes; stat and SHA-256 receipt match</td></tr><tr><td><span class="b bad">FAIL</span></td><td class="mono">launchd:com.aravinth.tennis-canary</td><td>loaded; last exit code=1</td></tr><tr><td><span class="b bad">FAIL</span></td><td class="mono">launchd:com.aravinth.tennis-chall-elo-weekly</td><td>job has no last exit code; latest com.aravinth.tennis-chall-elo-weekly.log is stale (8.6d ago &gt; 8.0d)</td></tr><tr><td><span class="b warn">PENDING</span></td><td class="mono">launchd:com.aravinth.tennis-claude-morning</td><td>loaded; pending first run since boot (recent knowledge_full_status.json 1.9h ago)</td></tr><tr><td><span class="b bad">FAIL</span></td><td class="mono">launchd:com.aravinth.tennis-claude-pipeline</td><td>job has no last exit code; latest com.aravinth.tennis-claude-pipeline.log is stale (3.0d ago &gt; 30.0h)</td></tr><tr><td><span class="b bad">FAIL</span></td><td class="mono">launchd:com.aravinth.tennis-refresh-player-stats</td><td>job has no last exit code; latest com.aravinth.tennis-refresh-player-stats.log is stale (2.6d ago &gt; 30.0h)</td></tr><tr><td><span class="b bad">FAIL</span></td><td class="mono">launchd:com.aravinth.tennis.clv-capture</td><td>job has no last exit code; latest clv_capture_cron.log is stale (2.7d ago &gt; 30.0h)</td></tr><tr><td><span class="b ok">OK</span></td><td class="mono">launchd:com.aravinth.tennis.pinnacle-scraper</td><td>loaded; last exit code=0</td></tr><tr><td><span class="b bad">FAIL</span></td><td class="mono">launchd:com.aravinth.tennis.wta-refresh</td><td>job has no last exit code; latest refresh_wta_launchd.log is stale (2.6d ago &gt; 30.0h)</td></tr><tr><td><span class="b ok">OK</span></td><td class="mono">quote_capture</td><td>latest full sweep status=&#x27;complete&#x27;, age=0:26:57.889878</td></tr></tbody>
+    </table>
+  </div>
+</div>
 
 <script>
-function build(){let p=[],d=[];
-document.querySelectorAll('.pl:checked').forEach(c=>p.push(c.dataset.n));
-document.querySelectorAll('.dc:checked').forEach(c=>d.push(c.dataset.n+'(reason?)'));
-let s='';if(p.length)s+='PLACED: '+p.join(', ')+'. ';if(d.length)s+='DECLINED: '+d.join(', ')+'.';
-document.getElementById('out').textContent=s||'(nothing selected)';
-if(s&&navigator.clipboard)navigator.clipboard.writeText(s);}
-</script></body></html>
+function build(){
+  let p=[],d=[];
+  document.querySelectorAll('.pl:checked').forEach(c=>p.push(c.dataset.n));
+  document.querySelectorAll('.dc:checked').forEach(c=>d.push(c.dataset.n+'(reason?)'));
+  let s='';
+  if(p.length)s+='PLACED: '+p.join(', ')+'. ';
+  if(d.length)s+='DECLINED: '+d.join(', ')+'.';
+  document.getElementById('out').textContent=s||'(nothing selected)';
+  if(s&&navigator.clipboard)navigator.clipboard.writeText(s);
+}
+</script>
+</body>
+</html>
